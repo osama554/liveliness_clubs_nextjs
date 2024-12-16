@@ -1,7 +1,7 @@
-import ClubsHome from "@/components/clubsHome/clubsHome";
+import HomePage from "@/components/homePage/homePage";
 
 export default function Home() {
   return (
-    <ClubsHome />
+    <HomePage />
   );
 }

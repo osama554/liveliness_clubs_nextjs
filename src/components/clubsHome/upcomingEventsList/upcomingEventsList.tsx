@@ -45,7 +45,7 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                             <React.Fragment key={index}>
                                 <div className="flex items-center gap-4">
                                     <div
-                                        className="w-[7.5rem] h-[7.5rem] bg-surface-bg rounded-2xl border 
+                                        className="w-[7.5rem] h-[7.5rem] bg-surface-bg rounded-2xl 
                                             shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
                                     >
                                         <Image

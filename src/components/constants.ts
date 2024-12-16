@@ -545,9 +545,74 @@ const dummyEvents: IEventModel[] = [
     },
 ];
 
+const clubs = [
+    {
+        title: "Running Club",
+        rating: 4.5,
+        reviews: 23,
+        members: 199,
+        distance: "4.3 km",
+        location: "Barcelona, Spain",
+        clubImage: "/static/club-1.svg",
+        userImage: "/static/userImagePlaceholder.svg",
+    },
+    {
+        title: "Cycling Club",
+        rating: 4.8,
+        reviews: 56,
+        members: 345,
+        distance: "6.2 km",
+        location: "Madrid, Spain",
+        clubImage: "/static/club-2.svg",
+        userImage: "/static/userImagePlaceholder.svg",
+    },
+    {
+        title: "Photography Club",
+        rating: 4.6,
+        reviews: 78,
+        members: 150,
+        distance: "2.1 km",
+        location: "Valencia, Spain",
+        clubImage: "/static/club-3.svg",
+        userImage: "/static/userImagePlaceholder.svg",
+    },
+    {
+        title: "Running Club",
+        rating: 4.5,
+        reviews: 23,
+        members: 199,
+        distance: "4.3 km",
+        location: "Barcelona, Spain",
+        clubImage: "/static/club-1.svg",
+        userImage: "/static/userImagePlaceholder.svg",
+    },
+    {
+        title: "Cycling Club",
+        rating: 4.8,
+        reviews: 56,
+        members: 345,
+        distance: "6.2 km",
+        location: "Madrid, Spain",
+        clubImage: "/static/club-2.svg",
+        userImage: "/static/userImagePlaceholder.svg",
+    },
+    {
+        title: "Photography Club",
+        rating: 4.6,
+        reviews: 78,
+        members: 150,
+        distance: "2.1 km",
+        location: "Valencia, Spain",
+        clubImage: "/static/club-3.svg",
+        userImage: "/static/userImagePlaceholder.svg",
+    },
+];
+
+
 export {
     socials,
     tabs,
     dummyEvents,
-    reviewCards
+    reviewCards,
+    clubs
 };

@@ -11,7 +11,7 @@ import ClubEvents from "./clubEvents/clubEvents";
 import ClubReviews from "./clubReviews/clubReviews";
 
 const ClubsHome = () => {
-    const [activeTab, setActiveTab] = useState("Reviews");
+    const [activeTab, setActiveTab] = useState("Events");
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
     const renderContent = () => {
@@ -42,14 +42,14 @@ const ClubsHome = () => {
                 </div>
                 <div
                     className="absolute left-2 md:left-6 transform -translate-y-1/2 
-                w-20 h-20 md:w-[7.5rem]  md:h-[7.5rem] bg-surface-bg rounded-2xl border border-primary
+                w-20 h-20 md:w-[7.5rem] md:h-[7.5rem] rounded-2xl
                 shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
                 >
                     <Image
                         src="/static/userImagePlaceholder.svg"
                         alt="User"
-                        width={120}
-                        height={120}
+                        width={0}
+                        height={0}
                         className="w-full"
                     />
                 </div>
