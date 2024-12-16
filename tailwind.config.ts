@@ -76,7 +76,7 @@ export default {
           xl: "5rem",
         },
         screens: {
-          sm: "375px",
+          sm: "100%",
           md: "768px",
           lg: "960px",
           xl: "1440px",
