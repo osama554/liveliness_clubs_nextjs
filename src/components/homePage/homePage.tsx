@@ -10,12 +10,12 @@ import { clubs } from "../constants";
 
 const HomePage = () => {
     return (
-        <>
-            <div className="container z-10 relative bg-surface-bg">
+        <div className="container flex flex-col">
+            <div className="z-10 relative bg-surface-bg">
                 <Header />
             </div>
             <div className="flex flex-col md:flex-row gap-12 md:gap-0 h-[44.5rem] md:h-[27.5rem] xl:h-[34.375rem]">
-                <div className="flex-1 pl-4 md:pl-6 lg:pl-10 xl:pl-20 pr-[1.875rem] pt-[3.75rem] md:pt-0 flex justify-center items-center">
+                <div className="flex-1 pr-[1.875rem] pt-[3.75rem] md:pt-0 flex justify-center items-center">
                     <div className="flex flex-col gap-12">
                         <h2 className="text-headingLg xl:text-headingXl font-semibold text-primary">
                             Easily find sports and wellness activities.
@@ -63,7 +63,7 @@ const HomePage = () => {
                     ></div>
                 </div>
             </div>
-            <div className="container flex-col gap-10 flex pb-0 xl:pb-[3.75rem]">
+            <div className="flex-col gap-10 flex pb-0 xl:pb-[3.75rem]">
                 <div className="flex gap-4">
                     <div className="flex w-full bg-surface-hard gap-2.5 py-[18px] px-4 h-12 lg:h-14 justify-between items-center rounded-xl">
                         <input
@@ -158,7 +158,7 @@ const HomePage = () => {
                 </div>
                 <Footer />
             </div>
-        </>
+        </div>
     );
 }
 
