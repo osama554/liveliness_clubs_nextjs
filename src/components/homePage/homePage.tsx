@@ -170,7 +170,7 @@ const HomePage = () => {
                 <Footer />
             </div>
             {isFilterOpen && (
-                <Sidebar isOpen={isFilterOpen} onClose={closeSidebar}>
+                <Sidebar isOpen={isFilterOpen} heading="Select Sports" onClose={closeSidebar}>
                     <div className="flex flex-col justify-between flex-1">
                         <div className="flex flex-wrap gap-4">
                             {categories.map((item, index) => (

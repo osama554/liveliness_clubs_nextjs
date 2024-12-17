@@ -4,13 +4,14 @@ import { memo, useEffect, useRef } from "react"
 import ISidebarProps from "./interfaces/ISidebarProps";
 
 const Sidebar = (props: ISidebarProps) => {
-    const { children, isOpen, onClose } = props;
+    const { children, isOpen, heading, onClose } = props;
 
     const sidebarRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node) &&
+                !(document.querySelector("[data-calendar-toggle]")?.contains(event.target as Node))) {
                 onClose();
             }
         };
@@ -36,7 +37,7 @@ const Sidebar = (props: ISidebarProps) => {
             <div className="flex flex-col">
                 <div className="flex justify-between p-4 items-center">
                     <h3 className="text-headingSm font-normal text-primary">
-                        Select Sports
+                        {heading}
                     </h3>
                     <Image
                         src="/static/close.svg"

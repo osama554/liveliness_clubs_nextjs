@@ -1,18 +1,28 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import Image from "next/image";
 
-import { dummyEvents, tabs } from "../constants";
+import { categories, dummyEvents, tabs } from "../constants";
 
 import Header from "../common/header/header";
 import ClubInfo from "./clubInfo/clubInfo";
 import ClubEvents from "./clubEvents/clubEvents";
 import ClubReviews from "./clubReviews/clubReviews";
+import Sidebar from "../common/sidebar/sidebar";
 
 const ClubsHome = () => {
     const [activeTab, setActiveTab] = useState("Events");
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+    const toggleFilters = useCallback(() => setIsFilterOpen((prev) => !prev), [setIsFilterOpen]);
+    const closeSidebar = useCallback(() => setIsFilterOpen(false), [setIsFilterOpen]);
+
+    const handleCategoryClick = (category: string) => {
+        setSelectedCategory((prev) => (prev === category ? null : category));
+    };
 
     const renderContent = () => {
         switch (activeTab) {
@@ -59,7 +69,10 @@ const ClubsHome = () => {
                 <div className="flex flex-col lg:flex-row gap-2 xl:pt-4">
                     <div className="w-full md:w-[391px] flex md:hidden xl:flex flex-col">
                         <div className="flex gap-4 items-center max-w-full md:max-w-[379px] mb-4">
-                            <div className="hidden xl:flex bg-surface-hard gap-2.5 py-4 px-6 justify-center items-center rounded-2xl h-12 lg:h-14">
+                            <div
+                                className="hidden xl:flex bg-surface-hard gap-2.5 py-4 px-6 justify-center items-center rounded-2xl h-12 lg:h-14 cursor-pointer"
+                                onClick={toggleFilters}
+                            >
                                 <h5 className="font-normal text-bodyMd text-primary">Filters</h5>
                                 <Image
                                     src="/static/filters.svg"
@@ -105,7 +118,10 @@ const ClubsHome = () => {
                                     height={24}
                                 />
                             </div>
-                            <div className="hidden sm:flex xl:hidden bg-surface-hard gap-2.5 py-4 px-6 justify-center items-center rounded-2xl h-12">
+                            <div
+                                className="hidden sm:flex xl:hidden bg-surface-hard gap-2.5 py-4 px-6 justify-center items-center rounded-2xl h-12 cursor-pointer"
+                                onClick={toggleFilters}
+                            >
                                 <h5 className="hidden md:block font-normal text-bodyMd text-primary">Filters</h5>
                                 <Image
                                     src="/static/filters.svg"
@@ -114,7 +130,10 @@ const ClubsHome = () => {
                                     height={24}
                                 />
                             </div>
-                            <div className="w-12 overflow-hidden flex sm:hidden bg-surface-hard gap-2.5 justify-center items-center rounded-2xl h-12">
+                            <div
+                                className="w-12 overflow-hidden flex sm:hidden bg-surface-hard gap-2.5 justify-center items-center rounded-2xl h-12 cursor-pointer"
+                                onClick={toggleFilters}
+                            >
                                 <Image
                                     src="/static/filters.svg"
                                     alt="Filters"
@@ -127,6 +146,44 @@ const ClubsHome = () => {
                 </div>
                 {renderContent()}
             </div>
+            {isFilterOpen && (
+                <Sidebar isOpen={isFilterOpen} heading="Select Sports" onClose={closeSidebar}>
+                    <div className="flex flex-col justify-between flex-1">
+                        <div className="flex flex-wrap gap-4">
+                            {categories.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className={`py-2 px-4 rounded-lg cursor-pointer 
+                                        ${selectedCategory === item ? "bg-surface-green" : "bg-surface-secondary-medium"}`}
+                                    onClick={() => handleCategoryClick(item)}
+                                >
+                                    <h4
+                                        className={`text-bodyMd font-semibold 
+                                        ${selectedCategory === item ? "text-balticSea" : "text-primary"}`}
+                                    >
+                                        {item}
+                                    </h4>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <button
+                                type="button"
+                                className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
+                            >
+                                Apply
+                            </button>
+                            <button
+                                type="button"
+                                className="bg-surface-secondary-medium text-primary px-5 py-3 rounded-xl text-bodyMd font-semibold"
+                                onClick={() => setSelectedCategory(null)}
+                            >
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </Sidebar>
+            )}
         </div>
     )
 }

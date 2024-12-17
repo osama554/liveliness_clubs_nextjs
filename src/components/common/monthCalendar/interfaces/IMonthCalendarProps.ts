@@ -6,4 +6,5 @@ export default interface IMonthCalendarProps {
     events: IEventModel[];
     selectedDate: string | null
     setSelectedDate: Dispatch<SetStateAction<string | null>>;
+    inSidebar?: boolean;
 }

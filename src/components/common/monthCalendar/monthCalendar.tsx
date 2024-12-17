@@ -7,7 +7,7 @@ import IEventsByMonth from '@/components/clubsHome/interfaces/IEventsByMonth';
 import IMonthCalendarProps from './interfaces/IMonthCalendarProps';
 
 const MonthCalendar = (props: IMonthCalendarProps) => {
-    const { events, selectedDate, setSelectedDate } = props;
+    const { events, selectedDate, inSidebar = false, setSelectedDate } = props;
 
     const [currentMonth, setCurrentMonth] = useState(moment());
     const [localSelectedDate, setLocalSelectedDate] = useState<moment.Moment | null>(
@@ -93,6 +93,7 @@ const MonthCalendar = (props: IMonthCalendarProps) => {
 
                         let backgroundClass = '';
                         let textClass = '';
+
                         if (isSelectedDate) {
                             backgroundClass = 'bg-surface-medium';
                             textClass = 'text-primary';
@@ -104,14 +105,14 @@ const MonthCalendar = (props: IMonthCalendarProps) => {
                         return (
                             <div
                                 key={currentDay.format('YYYY-MM-DD')}
-                                className={`flex flex-col items-center justify-center rounded-2xl w-12 h-12 cursor-pointer 
+                                className={`flex flex-col items-center justify-center cursor-pointer 
+                                    rounded-lg xl:rounded-2xl w-8 h-8 xl:w-12 xl:h-12
                                     ${isCurrentMonth ? 'text-primary' : 'text-secondary'}
                                     ${currentDay.month() !== currentMonth.month() ? 'text-tertiary' : ''}
                                     ${backgroundClass}`}
                                 onClick={() => handleDateClick(currentDay)}
                             >
-                                <h2 className={`font-semibold text-bodyLg text-center 
-                                    ${textClass}`}
+                                <h2 className={`text-center ${textClass} text-bodySm font-medium xl:text-bodyLg md:font-semibold`}
                                 >
                                     {currentDay.date()}
                                 </h2>
@@ -126,9 +127,9 @@ const MonthCalendar = (props: IMonthCalendarProps) => {
     };
 
     return (
-        <div className={`flex flex-col bg-surface-hard rounded-xl p-6`}>
+        <div className={`flex flex-col bg-surface-hard rounded-xl ${inSidebar ? 'p-4 w-full' : 'p-6'}`}>
             <div
-                className={`flex justify-between items-center border-b border-primary pb-6 mb-6`}
+                className={`flex justify-between items-center border-b border-primary ${inSidebar ? "pb-4 mb-4" : "pb-6 mb-6"}`}
             >
                 <button
                     className="w-6 h-6 flex justify-center items-center"
@@ -141,7 +142,7 @@ const MonthCalendar = (props: IMonthCalendarProps) => {
                         alt="Previous"
                     />
                 </button>
-                <h3 className="text-primary font-normal text-headingSm text-center">
+                <h3 className={`text-primary text-center text-bodyXl font-semibold xl:text-headingSm xl:font-normal`}>
                     {currentMonth.format('MMMM')}
                     <span className='text-tertiary'>
                         {currentMonth.format(' YYYY')}
@@ -160,7 +161,7 @@ const MonthCalendar = (props: IMonthCalendarProps) => {
                     />
                 </button>
             </div>
-            <div className="grid grid-cols-7 text-center text-bodyMd text-secondary font-normal">
+            <div className={`grid grid-cols-7 text-center text-secondary text-bodySm font-medium xl:text-bodyMd xl:font-normal`}>
                 <h2>Sun</h2>
                 <h2>Mon</h2>
                 <h2>Tue</h2>
