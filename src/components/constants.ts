@@ -608,11 +608,26 @@ const clubs = [
     },
 ];
 
+const categories = [
+    "Running",
+    "Paddle Surf",
+    "Snowboard",
+    "Hiking",
+    "Mountain Cycling",
+    "Yoga",
+    "Surf",
+    "Fitness",
+    "Climbing",
+    "Tennis",
+    "Parkour",
+    "Other",
+];
 
 export {
     socials,
     tabs,
     dummyEvents,
     reviewCards,
-    clubs
+    clubs,
+    categories
 };

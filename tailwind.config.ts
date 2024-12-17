@@ -10,6 +10,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        balticSea: "#272727",
         surface: {
           light: {
             bg: '#FFFFFF',
