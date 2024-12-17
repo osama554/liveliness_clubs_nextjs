@@ -1,11 +1,35 @@
 import Image from "next/image";
-import { memo, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 
 const isAuthenticated = true;
 
 const Header = () => {
     const [theme,] = useState<string>("dark");
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const menuRef = useRef<HTMLDivElement | null>(null);
+    const buttonRef = useRef<HTMLImageElement | null>(null);
+
+    const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), [setMenuOpen]);
+    const closeMenu = useCallback(() => setMenuOpen(false), [setMenuOpen]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node) &&
+                buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
+                closeMenu();
+            }
+        };
+
+        if (menuOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [menuOpen, closeMenu]);
 
     // useEffect(() => {
     //     if (theme === "dark") {
@@ -16,7 +40,6 @@ const Header = () => {
     // }, [theme]);
 
     // const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"));
-    const toggleMenu = () => setMenuOpen((prev) => !prev);
 
     return (
         <div className="flex py-[22px] items-center relative">
@@ -140,9 +163,13 @@ const Header = () => {
                 height={24}
                 className="cursor-pointer lg:hidden"
                 onClick={toggleMenu}
+                ref={buttonRef}
             />
             {menuOpen && (
-                <nav className="absolute top-full right-0 w-full bg-theme-box shadow-sm z-50 rounded-xl">
+                <nav
+                    className="absolute top-full right-0 w-full bg-theme-box shadow-sm z-50 rounded-xl"
+                    ref={menuRef}
+                >
                     <ul className="flex flex-col p-4 gap-4">
                         <li>
                             <p className="text-bodyMd font-semibold text-secondary cursor-pointer">

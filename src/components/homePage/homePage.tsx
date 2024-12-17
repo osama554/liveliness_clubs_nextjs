@@ -21,13 +21,14 @@ const HomePage = () => {
     };
 
     return (
-        <div className="container flex flex-col">
-            <div className="z-10 relative bg-surface-bg">
+        <>
+            <div className=" container z-10 relative bg-surface-bg">
                 <Header />
             </div>
-            <div className="flex flex-col md:flex-row gap-12 md:gap-0 h-[44.5rem] md:h-[27.5rem] xl:h-[34.375rem]">
-                <div className="flex-1 pr-[1.875rem] pt-[3.75rem] md:pt-0 flex justify-center items-center">
-                    <div className="flex flex-col gap-12">
+            <div className="flex h-full md:h-[27.5rem] xl:h-[34.375rem] lg:bg-[url('/static/home-bg.svg')] bg-no-repeat 
+            lg:bg-[center_right_-14.375rem] xl:bg-[center_right] min-[2600px]:bg-[center_right_30%] bg-auto w-full">
+                <div className="container">
+                    <div className="flex flex-col gap-14 md:gap-12 w-full md:w-2/4 h-full justify-center pt-14">
                         <h2 className="text-headingLg xl:text-headingXl font-semibold text-primary">
                             Easily find sports and wellness activities.
                         </h2>
@@ -59,22 +60,8 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-full md:w-5/12 h-full relative">
-                    <div
-                        className="bg-[url('/static/home-bg.svg')] bg-no-repeat h-full 
-                    bg-[-28px] md:bg-[0px] xl:bg-center bg-[length:110%] md:bg-[length:160%] xl:bg-contain"
-                    ></div>
-                    <div
-                        className="absolute top-0 right-0 w-full h-full md:bg-gradient-to-tr 
-                        from-[#3C8CF4] from-60% via-[#27F998] to-[#CEEB20] md:opacity-10 md:backdrop-blur-[200px]"
-                        style={{
-                            maskImage: "radial-gradient(circle at top right, rgba(0,0,0,1) 37%, rgba(0,0,0,0) 55%)",
-                            WebkitMaskImage: "radial-gradient(circle at top right, rgba(0,0,0,1) 37%, rgba(0,0,0,0) 55%)",
-                        }}
-                    ></div>
-                </div>
             </div>
-            <div className="flex-col gap-10 flex pb-0 xl:pb-[3.75rem]">
+            <div className="container flex-col gap-7 md:gap-10 flex pb-0 xl:pb-[3.75rem] pt-7 md:pt-10">
                 <div className="flex gap-4">
                     <div className="flex w-full bg-surface-hard gap-2.5 py-[18px] px-4 h-12 lg:h-14 justify-between items-center rounded-xl">
                         <input
@@ -220,7 +207,7 @@ const HomePage = () => {
                     </div>
                 </Sidebar>
             )}
-        </div>
+        </>
     );
 }
 
