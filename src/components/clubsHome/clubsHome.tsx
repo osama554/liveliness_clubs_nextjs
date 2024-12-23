@@ -3,26 +3,30 @@
 import { memo, useCallback, useState } from "react";
 import Image from "next/image";
 
-import { categories, dummyEvents, tabs } from "../constants";
+import { dummyEvents, tabs } from "../constants";
 
 import Header from "../common/header/header";
 import ClubInfo from "./clubInfo/clubInfo";
 import ClubEvents from "./clubEvents/clubEvents";
 import ClubReviews from "./clubReviews/clubReviews";
 import Sidebar from "../common/sidebar/sidebar";
+import MonthCalendar from "../common/monthCalendar/monthCalendar";
+// import { useSearchParams } from "next/navigation";
 
 const ClubsHome = () => {
     const [activeTab, setActiveTab] = useState("Events");
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    // const searchParams = useSearchParams();
+
+    // const clubId = searchParams.get("userId");
+    // const clubName = searchParams.get("clubName");
+    // const userName = searchParams.get("userName");
+    // const desciption = searchParams.get("desciption");
+    // const members = searchParams.get("members");
 
     const toggleFilters = useCallback(() => setIsFilterOpen((prev) => !prev), [setIsFilterOpen]);
     const closeSidebar = useCallback(() => setIsFilterOpen(false), [setIsFilterOpen]);
-
-    const handleCategoryClick = (category: string) => {
-        setSelectedCategory((prev) => (prev === category ? null : category));
-    };
 
     const renderContent = () => {
         switch (activeTab) {
@@ -147,40 +151,22 @@ const ClubsHome = () => {
                 {renderContent()}
             </div>
             {isFilterOpen && (
-                <Sidebar isOpen={isFilterOpen} heading="Select Sports" onClose={closeSidebar}>
+                <Sidebar isOpen={isFilterOpen} heading="Calendar" onClose={closeSidebar}>
                     <div className="flex flex-col justify-between flex-1">
                         <div className="flex flex-wrap gap-4">
-                            {categories.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className={`py-2 px-4 rounded-lg cursor-pointer 
-                                        ${selectedCategory === item ? "bg-surface-green" : "bg-surface-secondary-medium"}`}
-                                    onClick={() => handleCategoryClick(item)}
-                                >
-                                    <h4
-                                        className={`text-bodyMd font-semibold 
-                                        ${selectedCategory === item ? "text-balticSea" : "text-primary"}`}
-                                    >
-                                        {item}
-                                    </h4>
-                                </div>
-                            ))}
+                            <MonthCalendar
+                                events={dummyEvents}
+                                selectedDate={selectedDate}
+                                setSelectedDate={setSelectedDate}
+                                inSidebar={true}
+                            />
                         </div>
-                        <div className="flex flex-col gap-3">
-                            <button
-                                type="button"
-                                className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
-                            >
-                                Apply
-                            </button>
-                            <button
-                                type="button"
-                                className="bg-surface-secondary-medium text-primary px-5 py-3 rounded-xl text-bodyMd font-semibold"
-                                onClick={() => setSelectedCategory(null)}
-                            >
-                                Reset
-                            </button>
-                        </div>
+                        <button
+                            type="button"
+                            className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
+                        >
+                            Apply
+                        </button>
                     </div>
                 </Sidebar>
             )}

@@ -1,44 +1,15 @@
 import Image from "next/image";
-import { memo, useCallback, useEffect, useRef, useState } from "react"
-import Sidebar from "../sidebar/sidebar";
-import MonthCalendar from "../monthCalendar/monthCalendar";
-import { dummyEvents } from "@/components/constants";
+import { memo, useCallback, useRef, useState } from "react";
 
 const isAuthenticated = true;
 
 const Header = () => {
     const [theme,] = useState<string>("dark");
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLImageElement | null>(null);
-    const calendarRef = useRef<HTMLDivElement | null>(null);
 
-    const closeCalendar = useCallback(() => setIsCalendarOpen(false), [setIsCalendarOpen]);
-    const closeMenu = useCallback(() => setMenuOpen(false), [setMenuOpen]);
-    const toggleCalendar = useCallback(() => setIsCalendarOpen((prev) => !prev), [setIsCalendarOpen]);
     const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), [setMenuOpen]);
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            const target = event.target as Node;
-            if (menuRef.current && !menuRef.current.contains(target) &&
-                buttonRef.current && !buttonRef.current.contains(target)) {
-                closeMenu();
-            }
-        };
-
-        if (menuOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [menuOpen, closeMenu]);
 
     // useEffect(() => {
     //     if (theme === "dark") {
@@ -94,8 +65,6 @@ const Header = () => {
                     </button>
                     {isAuthenticated && (
                         <div
-                            onClick={toggleCalendar}
-                            ref={calendarRef}
                             data-calendar-toggle
                             className="bg-theme-box w-12 h-12 rounded-xl flex justify-center items-center cursor-pointer"
                         >
@@ -211,26 +180,6 @@ const Header = () => {
                         </li>
                     </ul>
                 </nav>
-            )}
-            {isCalendarOpen && (
-                <Sidebar isOpen={isCalendarOpen} heading="Calendar" onClose={closeCalendar}>
-                    <div className="flex flex-col justify-between flex-1">
-                        <div className="flex flex-wrap gap-4">
-                            <MonthCalendar
-                                events={dummyEvents}
-                                selectedDate={selectedDate}
-                                setSelectedDate={setSelectedDate}
-                                inSidebar={true}
-                            />
-                        </div>
-                        <button
-                            type="button"
-                            className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
-                        >
-                            Apply
-                        </button>
-                    </div>
-                </Sidebar>
             )}
         </div>
     )

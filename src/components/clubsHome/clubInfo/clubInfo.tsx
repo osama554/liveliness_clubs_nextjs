@@ -4,6 +4,14 @@ import { memo } from "react"
 
 import { socials } from "@/components/constants";
 
+// interface IClubInfoProps {
+//     id: string;
+//     name: string;
+//     userName: string;
+//     desc: string;
+//     members: string;
+// }
+
 const ClubInfo = () => (
     <React.Fragment>
         <div className="flex w-full justify-between gap-3 md:items-center flex-col md:flex-row">

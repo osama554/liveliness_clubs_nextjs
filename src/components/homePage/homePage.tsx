@@ -1,17 +1,27 @@
 "use client";
 
-import { memo, useCallback, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import Header from "../common/header/header";
 import Footer from "../common/footer/footer";
 import Sidebar from "../common/sidebar/sidebar";
 
-import { categories, clubs } from "../constants";
+import { categories } from "../constants";
+import IResponseData from "@/app/interfaces/IResponseData";
+import IClubModel from "./interfaces/IClubResponse";
+
+const serverUrl = "https://prod-ts-liveliness-server.onrender.com/api";
 
 const HomePage = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [clubs, setClubs] = useState<IClubModel[]>([]);
+    const [allClubs, setAllClubs] = useState<IClubModel[]>([]);
+    const [loadedClubs, setLoadedClubs] = useState(20);
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
 
     const toggleFilters = useCallback(() => setIsFilterOpen((prev) => !prev), [setIsFilterOpen]);
     const closeSidebar = useCallback(() => setIsFilterOpen(false), [setIsFilterOpen]);
@@ -19,6 +29,59 @@ const HomePage = () => {
     const handleCategoryClick = (category: string) => {
         setSelectedCategory((prev) => (prev === category ? null : category));
     };
+
+    const getAllClubs = async (sport: string) => {
+        setIsLoading(true);
+        try {
+            const path = `${serverUrl}/club/getAllClubsForCommunitySport`;
+            const response = await fetch(path, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ sport }),
+            });
+
+            if (response.ok) {
+                const data: IResponseData<IClubModel> = await response.json();
+                const clubs = data.data;
+
+                clubs.sort((a, b) => b.participants.length - a.participants.length);
+                setAllClubs(clubs);
+                setClubs(clubs.slice(0, 20));
+                setIsLoading(false);
+                return { data: clubs };
+            } else {
+                return { error: "Something went wrong" };
+            }
+        } catch (error) {
+            console.log(error)
+            return { error: "An unknown error occurred" };
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const loadMoreClubs = () => {
+        const nextClubs = allClubs.slice(loadedClubs, loadedClubs + 20);
+        setClubs((prevClubs) => [...prevClubs, ...nextClubs]);
+        setLoadedClubs((prev) => prev + 20);
+    };
+
+    const handleApplyFilter = () => {
+        if (selectedCategory) {
+            getAllClubs(selectedCategory);
+        }
+        closeSidebar();
+    };
+
+    const handleClubClick = (club: IClubModel) => {
+        router.push(`/clubs?userId=${club.adminId}&clubName=${club.name}&userName=${club.username}&desciption=${club.bio}&members=${club.participants.length}`);
+    };
+
+    useEffect(() => {
+        getAllClubs('');
+    }, []);
 
     return (
         <>
@@ -93,40 +156,47 @@ const HomePage = () => {
                 </div>
                 <div className="pb-6 md:pb-10 flex flex-col gap-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                        {clubs.map((item, index) => (
-                            <div key={index}
-                                className="border border-primary rounded-2xl p-1.5 pb-3 cursor-pointer"
-                            >
-                                <div className="relative mb-8 md:mb-12">
-                                    <div className="rounded-xl overflow-hidden h-44 md:h-[13.5rem] xl:h-52">
-                                        <Image
-                                            src={item.clubImage}
-                                            alt={item.title}
-                                            width={0}
-                                            height={0}
-                                            className="w-full"
-                                        />
-                                    </div>
-                                    <div
-                                        className="absolute left-3 md:left-[0.563rem] transform -translate-y-1/2 
-                                            w-12 h-12 md:w-16 md:h-16 rounded-2xl
-                                            shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
-                                    >
-                                        <Image
-                                            src={item.userImage}
-                                            alt="User"
-                                            width={0}
-                                            height={0}
-                                            className="w-full"
-                                        />
-                                    </div>
+                        {!isLoading ? (
+                            clubs.length === 0 ? (
+                                <div className="col-span-full text-center text-bodyMd text-primary font-semibold">
+                                    No Clubs
                                 </div>
-                                <div className="flex flex-col gap-1 px-1.5">
-                                    <h3 className="text-primary text-bodyXl font-semibold">
-                                        {item.title}
-                                    </h3>
-                                    <div className="flex gap-2 items-center">
-                                        <div className="flex items-center gap-1">
+                            ) : (
+                                clubs.map((item, index) => (
+                                    <div key={index}
+                                        className="border border-primary rounded-2xl p-1.5 pb-3 cursor-pointer"
+                                        onClick={() => handleClubClick(item)}
+                                    >
+                                        <div className="relative mb-8 md:mb-12">
+                                            <div className="rounded-xl overflow-hidden h-44 md:h-[13.5rem] xl:h-52">
+                                                <Image
+                                                    src={item.headerPhoto}
+                                                    alt={item.name}
+                                                    width={0}
+                                                    height={0}
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                            <div
+                                                className="absolute left-3 md:left-[0.563rem] transform -translate-y-1/2 
+                                            w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden 
+                                            shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
+                                            >
+                                                <Image
+                                                    src={item.avatarPhoto}
+                                                    alt={item.name}
+                                                    width={0}
+                                                    height={0}
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col gap-1 px-1.5">
+                                            <h3 className="text-primary text-bodyXl font-semibold">
+                                                {item.name}
+                                            </h3>
+                                            <div className="flex gap-2 items-center">
+                                                {/* <div className="flex items-center gap-1">
                                             <h6 className="text-bodyMd text-primary font-semibold">{item.rating}</h6>
                                             <div className="flex gap-1">
                                                 {Array.from({ length: 5 }).map((_, index) => (
@@ -141,30 +211,37 @@ const HomePage = () => {
                                                 ))}
                                             </div>
                                             <h6 className="text-bodyMd text-primary font-semibold">({item.reviews})</h6>
+                                        </div> */}
+                                                <h6 className="text-bodyMd text-secondary font-normal">{item.participants.length} members</h6>
+                                            </div>
+                                            <div className="flex gap-2 items-center">
+                                                <h6 className="text-bodySm text-tertiary font-medium">4.3 km</h6>
+                                                <Image
+                                                    src="/static/dot.svg"
+                                                    alt=""
+                                                    width={5}
+                                                    height={5}
+                                                />
+                                                <h6 className="text-bodySm text-tertiary font-medium">{item.locationString}.</h6>
+                                            </div>
                                         </div>
-                                        <h6 className="text-bodyMd text-secondary font-normal">{item.members} members</h6>
                                     </div>
-                                    <div className="flex gap-2 items-center">
-                                        <h6 className="text-bodySm text-tertiary font-medium">{item.distance}</h6>
-                                        <Image
-                                            src="/static/dot.svg"
-                                            alt=""
-                                            width={5}
-                                            height={5}
-                                        />
-                                        <h6 className="text-bodySm text-tertiary font-medium">{item.location}.</h6>
-                                    </div>
-                                </div>
+                                )))) : (
+                            <div className="loading-state">
+                                <div className="loading"></div>
                             </div>
-                        ))}
+                        )}
                     </div>
                     <div className="flex justify-center">
-                        <button
-                            type="button"
-                            className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
-                        >
-                            Load More
-                        </button>
+                        {loadedClubs < allClubs.length && (
+                            <button
+                                type="button"
+                                className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
+                                onClick={loadMoreClubs}
+                            >
+                                Load More
+                            </button>
+                        )}
                     </div>
                 </div>
                 <Footer />
@@ -193,6 +270,7 @@ const HomePage = () => {
                             <button
                                 type="button"
                                 className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
+                                onClick={handleApplyFilter}
                             >
                                 Apply
                             </button>
