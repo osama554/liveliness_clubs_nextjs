@@ -1,0 +1,15 @@
+  .animate {
+    animation: shimmer 3s;
+    animation-iteration-count: infinite;
+    background: linear-gradient(to right, #adadad 5%, #7c7c7c 25%, #adadad 35%);
+    background-size: 1000px 100%;
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: -1000px 0;
+    }
+    to {
+      background-position: 1000px 0;
+    }
+  }

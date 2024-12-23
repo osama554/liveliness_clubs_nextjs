@@ -1,18 +1,69 @@
 "use client";
 
 import { memo, useCallback, useEffect, useState } from "react"
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
-import Header from "../common/header/header";
-import Footer from "../common/footer/footer";
-import Sidebar from "../common/sidebar/sidebar";
-
-import { categories } from "../constants";
+import { categories } from "@/components/constants";
+import Header from "@/components/common/header/header";
+import Footer from "@/components/common/footer/footer";
+import Sidebar from "@/components/common/sidebar/sidebar";
 import IResponseData from "@/app/interfaces/IResponseData";
-import IClubModel from "./interfaces/IClubResponse";
+import IClubModel from "@/components/homePage/interfaces/IClubResponse";
+import Shimmer from "@/components/shimmer/shimmer";
 
 const serverUrl = "https://prod-ts-liveliness-server.onrender.com/api";
+
+const shimmerJSX = (
+    <>
+        <div className="border border-primary rounded-2xl p-1.5 pb-3 cursor-pointer">
+            <div className="relative mb-8 md:mb-12">
+                <div className="rounded-xl overflow-hidden h-44 md:h-[13.5rem] xl:h-52">
+                    <Shimmer height="216px" />
+                </div>
+                <div
+                    className="absolute left-3 md:left-[0.563rem] transform -translate-y-1/2 
+                                            w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden 
+                                            shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
+                >
+                    <Shimmer height="64px" />
+                </div>
+            </div>
+            <div className="flex flex-col gap-1 px-1.5">
+                <Shimmer height="20px" width="35%" />
+                <div className="flex gap-2 items-center">
+                    <Shimmer height="20px" width="20%" />
+                </div>
+                <div className="flex gap-2 items-center">
+                    <Shimmer height="20px" width="20%" />
+                </div>
+            </div>
+        </div>
+        <div className="border border-primary rounded-2xl p-1.5 pb-3 cursor-pointer">
+            <div className="relative mb-8 md:mb-12">
+                <div className="rounded-xl overflow-hidden h-44 md:h-[13.5rem] xl:h-52">
+                    <Shimmer height="216px" />
+                </div>
+                <div
+                    className="absolute left-3 md:left-[0.563rem] transform -translate-y-1/2 
+                                            w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden 
+                                            shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
+                >
+                    <Shimmer height="64px" />
+                </div>
+            </div>
+            <div className="flex flex-col gap-1 px-1.5">
+                <Shimmer height="20px" width="35%" />
+                <div className="flex gap-2 items-center">
+                    <Shimmer height="20px" width="20%" />
+                </div>
+                <div className="flex gap-2 items-center">
+                    <Shimmer height="20px" width="20%" />
+                </div>
+            </div>
+        </div>
+    </>
+)
 
 const HomePage = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -20,7 +71,7 @@ const HomePage = () => {
     const [clubs, setClubs] = useState<IClubModel[]>([]);
     const [allClubs, setAllClubs] = useState<IClubModel[]>([]);
     const [loadedClubs, setLoadedClubs] = useState(20);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
     const toggleFilters = useCallback(() => setIsFilterOpen((prev) => !prev), [setIsFilterOpen]);
@@ -35,9 +86,9 @@ const HomePage = () => {
         try {
             const path = `${serverUrl}/club/getAllClubsForCommunitySport`;
             const response = await fetch(path, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ sport }),
             });
@@ -80,12 +131,14 @@ const HomePage = () => {
     };
 
     useEffect(() => {
-        getAllClubs('');
+        getAllClubs("");
     }, []);
+
+    console.log(clubs);
 
     return (
         <>
-            <div className=" container z-10 relative bg-surface-bg">
+            <div className=" container z-10 sticky top-0 bg-surface-bg">
                 <Header />
             </div>
             <div className="flex h-full md:h-[27.5rem] xl:h-[34.375rem] lg:bg-[url('/static/home-bg.svg')] bg-no-repeat 
@@ -172,9 +225,9 @@ const HomePage = () => {
                                                 <Image
                                                     src={item.headerPhoto}
                                                     alt={item.name}
-                                                    width={0}
-                                                    height={0}
-                                                    className="w-full"
+                                                    width={410}
+                                                    height={216}
+                                                    className="w-full h-full object-cover"
                                                 />
                                             </div>
                                             <div
@@ -185,8 +238,8 @@ const HomePage = () => {
                                                 <Image
                                                     src={item.avatarPhoto}
                                                     alt={item.name}
-                                                    width={0}
-                                                    height={0}
+                                                    width={64}
+                                                    height={64}
                                                     className="w-full"
                                                 />
                                             </div>
@@ -196,26 +249,26 @@ const HomePage = () => {
                                                 {item.name}
                                             </h3>
                                             <div className="flex gap-2 items-center">
-                                                {/* <div className="flex items-center gap-1">
-                                            <h6 className="text-bodyMd text-primary font-semibold">{item.rating}</h6>
-                                            <div className="flex gap-1">
-                                                {Array.from({ length: 5 }).map((_, index) => (
-                                                    <Image
-                                                        key={index}
-                                                        src="/static/star.svg"
-                                                        alt={`Star ${index + 1}`}
-                                                        width={9}
-                                                        height={9}
-                                                        className="w-3 h-3"
-                                                    />
-                                                ))}
-                                            </div>
-                                            <h6 className="text-bodyMd text-primary font-semibold">({item.reviews})</h6>
-                                        </div> */}
+                                                <div className="flex items-center gap-1">
+                                                    <h6 className="text-bodyMd text-primary font-semibold">{item.admin.reviewCount}</h6>
+                                                    <div className="flex gap-1">
+                                                        {Array.from({ length: item.admin.reviewCount }).map((_, index) => (
+                                                            <Image
+                                                                key={index}
+                                                                src="/static/star.svg"
+                                                                alt={`Star ${index + 1}`}
+                                                                width={9}
+                                                                height={9}
+                                                                className="w-3 h-3"
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                    <h6 className="text-bodyMd text-primary font-semibold">({item.admin.reviewCount})</h6>
+                                                </div>
                                                 <h6 className="text-bodyMd text-secondary font-normal">{item.participants.length} members</h6>
                                             </div>
                                             <div className="flex gap-2 items-center">
-                                                <h6 className="text-bodySm text-tertiary font-medium">4.3 km</h6>
+                                                {/* <h6 className="text-bodySm text-tertiary font-medium">4.3 km</h6> */}
                                                 <Image
                                                     src="/static/dot.svg"
                                                     alt=""
@@ -226,11 +279,9 @@ const HomePage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                )))) : (
-                            <div className="loading-state">
-                                <div className="loading"></div>
-                            </div>
-                        )}
+                                ))))
+                            : shimmerJSX
+                        }
                     </div>
                     <div className="flex justify-center">
                         {loadedClubs < allClubs.length && (
