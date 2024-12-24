@@ -175,7 +175,7 @@ const HomePage = () => {
                 <div className="container">
                     <div className="flex flex-col gap-14 md:gap-12 w-full md:w-2/4 h-full justify-center pt-14">
                         <h2 className="text-headingLg xl:text-headingXl font-semibold text-primary">
-                            Find your sports and wellness community Explore Clubs Find activities
+                            Find your sports and wellness community
                         </h2>
                         <div className="flex flex-col md:flex-row gap-4">
                             <button
