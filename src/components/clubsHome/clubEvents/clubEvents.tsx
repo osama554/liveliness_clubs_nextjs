@@ -6,7 +6,7 @@ import UpcomingEventsList from "../upcomingEventsList/upcomingEventsList";
 import IMonthCalendarProps from "@/components/common/monthCalendar/interfaces/IMonthCalendarProps";
 
 const ClubEvents = (props: IMonthCalendarProps) => {
-    const { events, selectedDate, setSelectedDate } = props;
+    const { events, selectedDate, setSelectedDate, loading = false } = props;
     return (
         <div className="flex gap-2 pb-4">
             <div className="w-[391px] hidden xl:block">
@@ -20,6 +20,7 @@ const ClubEvents = (props: IMonthCalendarProps) => {
                 <UpcomingEventsList
                     events={events}
                     selectedDate={selectedDate}
+                    loading={loading}
                 />
             </div>
         </div>

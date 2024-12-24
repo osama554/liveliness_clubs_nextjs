@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { memo, useCallback, useRef, useState } from "react";
 
 const isAuthenticated = true;
@@ -8,6 +9,7 @@ const Header = () => {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLImageElement | null>(null);
+    const router = useRouter();
 
     const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), [setMenuOpen]);
 
@@ -30,6 +32,7 @@ const Header = () => {
                     width={97}
                     height={24}
                     className="cursor-pointer"
+                    onClick={() => router.push('/')}
                 />
                 <span className="border border-primary"></span>
                 <p className="text-bodyMd font-semibold text-secondary cursor-pointer">
@@ -128,6 +131,7 @@ const Header = () => {
                         width={20}
                         height={16}
                         className="cursor-pointer"
+                        onClick={() => router.push('/')}
                     />
                     <Image
                         src="/static/search.svg"

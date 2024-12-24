@@ -1,9 +1,10 @@
 "use client";
 
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
-import { dummyEvents, tabs } from "../constants";
+import { serverUrl, tabs } from "../constants";
 
 import Header from "../common/header/header";
 import ClubInfo from "./clubInfo/clubInfo";
@@ -11,33 +12,94 @@ import ClubEvents from "./clubEvents/clubEvents";
 import ClubReviews from "./clubReviews/clubReviews";
 import Sidebar from "../common/sidebar/sidebar";
 import MonthCalendar from "../common/monthCalendar/monthCalendar";
-// import { useSearchParams } from "next/navigation";
+
+import IEventModel from "./interfaces/IEventModel";
+import IResponseData from "@/app/interfaces/IResponseData";
 
 const ClubsHome = () => {
     const [activeTab, setActiveTab] = useState("Events");
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    // const searchParams = useSearchParams();
+    const [isLoading, setIsLoading] = useState(false);
+    const [events, setEvents] = useState<IEventModel[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const searchParams = useSearchParams();
 
-    // const clubId = searchParams.get("userId");
-    // const clubName = searchParams.get("clubName");
-    // const userName = searchParams.get("userName");
-    // const desciption = searchParams.get("desciption");
-    // const members = searchParams.get("members");
+    const userId = searchParams.get("userId");
+    const clubName = searchParams.get("clubName");
+    const userName = searchParams.get("userName");
+    const desciption = searchParams.get("desciption");
+    const members = searchParams.get("members");
+    const reviewCount = Number(searchParams.get("reviewCount")) || 0;
+    const headerPhoto = searchParams.get("headerPhoto");
+    const avatarPhoto = searchParams.get("avatarPhoto");
+    const instagram = searchParams.get("instagram");
+    const youtube = searchParams.get("youtube");
+    const tiktok = searchParams.get("tiktok");
+    const website = searchParams.get("website");
 
     const toggleFilters = useCallback(() => setIsFilterOpen((prev) => !prev), [setIsFilterOpen]);
     const closeSidebar = useCallback(() => setIsFilterOpen(false), [setIsFilterOpen]);
 
+    const getEvents = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const path = `${serverUrl}/event/admin/${userId}`;
+            const response = await fetch(path, {
+                method: "GET"
+            });
+
+            if (response.ok) {
+                const data: IResponseData<IEventModel> = await response.json();
+                const events = data.data;
+                setEvents(events);
+
+                setIsLoading(false);
+                return { data: events };
+            } else {
+                return { error: "Something went wrong" };
+            }
+        } catch (error) {
+            console.log(error)
+            return { error: "An unknown error occurred" };
+        } finally {
+            setIsLoading(false);
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        if (userId?.trim()) {
+            getEvents();
+        }
+    }, [userId, getEvents]);
+
+    const filteredEvents = events.filter((event) =>
+        event.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     const renderContent = () => {
         switch (activeTab) {
             case "Deals":
-                return <ClubEvents events={dummyEvents} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />;
             case "Events":
-                return <ClubEvents events={dummyEvents} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />;
+                return (
+                    <ClubEvents
+                        events={filteredEvents}
+                        selectedDate={selectedDate}
+                        setSelectedDate={setSelectedDate}
+                        loading={isLoading}
+                    />
+                );
             case "Reviews":
                 return <ClubReviews />
             default:
-                return <ClubEvents events={dummyEvents} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />;
+                return (
+                    <ClubEvents
+                        events={filteredEvents}
+                        selectedDate={selectedDate}
+                        setSelectedDate={setSelectedDate}
+                        loading={isLoading}
+                    />
+                )
         }
     };
 
@@ -45,34 +107,44 @@ const ClubsHome = () => {
         <div className="container">
             <Header />
             <div className="w-full relative mb-[4.5rem] md:mb-[5.5rem]">
-                <div className="rounded-xl overflow-hidden">
+                <div className="rounded-xl overflow-hidden h-[198px] md:h-[300px] xl:h-[380px]">
                     <Image
-                        src="/static/clubHeader.svg"
+                        src={headerPhoto || ''}
                         alt="Header"
-                        width={0}
-                        height={0}
-                        className="w-full"
+                        width={1280}
+                        height={380}
+                        className="w-full h-full object-cover"
                     />
                 </div>
                 <div
                     className="absolute left-2 md:left-6 transform -translate-y-1/2 
-                w-20 h-20 md:w-[7.5rem] md:h-[7.5rem] rounded-2xl
+                w-20 h-20 md:w-[7.5rem] md:h-[7.5rem] rounded-2xl overflow-hidden 
                 shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
                 >
                     <Image
-                        src="/static/userImagePlaceholder.svg"
+                        src={avatarPhoto || ''}
                         alt="User"
-                        width={0}
-                        height={0}
+                        width={120}
+                        height={120}
                         className="w-full"
                     />
                 </div>
             </div>
             <div className="flex flex-col gap-3 md:gap-6">
-                <ClubInfo />
+                <ClubInfo
+                    name={clubName || ''}
+                    userName={userName || ''}
+                    desc={desciption || ''}
+                    members={members || ''}
+                    reviewCount={reviewCount}
+                    instagram={instagram || ''}
+                    youtube={youtube || ''}
+                    tiktok={tiktok || ''}
+                    website={website || ''}
+                />
                 <div className="flex flex-col lg:flex-row gap-2 xl:pt-4">
-                    <div className="w-full md:w-[391px] flex md:hidden xl:flex flex-col">
-                        <div className="flex gap-4 items-center max-w-full md:max-w-[379px] mb-4">
+                    <div className="w-full lg:w-[391px] flex flex-col">
+                        <div className="flex gap-4 items-center max-w-full xl:max-w-[379px] xl:mb-4">
                             <div
                                 className="hidden xl:flex bg-surface-hard gap-2.5 py-4 px-6 justify-center items-center rounded-2xl h-12 lg:h-14 cursor-pointer"
                                 onClick={toggleFilters}
@@ -105,57 +177,54 @@ const ClubsHome = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-1 flex">
-                        <div className="flex gap-3 w-full items-center">
-                            <div className="flex w-full bg-surface-hard gap-2.5 py-[18px] px-4 h-12 lg:h-14 justify-between items-center rounded-xl xl:mb-4">
-                                <input
-                                    type="text"
-                                    name="searchClubs"
-                                    id="searchClubs"
-                                    placeholder="Search for clubs"
-                                    className="focus:outline-none bg-transparent text-primary font-normal text-bodyMd"
-                                />
-                                <Image
-                                    src="/static/slash.svg"
-                                    alt="Search"
-                                    width={24}
-                                    height={24}
-                                />
-                            </div>
-                            <div
-                                className="hidden sm:flex xl:hidden bg-surface-hard gap-2.5 py-4 px-6 justify-center items-center rounded-2xl h-12 cursor-pointer"
-                                onClick={toggleFilters}
-                            >
-                                <h5 className="hidden md:block font-normal text-bodyMd text-primary">Filters</h5>
-                                <Image
-                                    src="/static/filters.svg"
-                                    alt="Filters"
-                                    width={24}
-                                    height={24}
-                                />
-                            </div>
-                            <div
-                                className="w-12 overflow-hidden flex sm:hidden bg-surface-hard gap-2.5 justify-center items-center rounded-2xl h-12 cursor-pointer"
-                                onClick={toggleFilters}
-                            >
-                                <Image
-                                    src="/static/filters.svg"
-                                    alt="Filters"
-                                    width={16}
-                                    height={16}
-                                />
-                            </div>
+                    <div className="flex gap-4 flex-1">
+                        <div className="flex w-full bg-surface-hard gap-2.5 py-[18px] px-4 h-12 lg:h-14 justify-between items-center rounded-xl">
+                            <input
+                                type="text"
+                                name="searchEvents"
+                                id="searchEvents"
+                                placeholder="Search for events"
+                                className="focus:outline-none bg-transparent text-primary font-normal text-bodyMd"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <Image
+                                src="/static/slash.svg"
+                                alt="Search"
+                                width={24}
+                                height={24}
+                            />
+                        </div>
+                        <div
+                            className="flex bg-surface-hard gap-2.5 md:py-4 md:px-6 justify-center items-center rounded-2xl h-12 lg:h-14 w-12 md:w-auto cursor-pointer"
+                            onClick={toggleFilters}
+                        >
+                            <h5 className="font-normal text-bodyMd text-primary hidden md:block">Filters</h5>
+                            <Image
+                                src="/static/filtersSmall.svg"
+                                alt="Filter"
+                                className="block md:hidden"
+                                width={16}
+                                height={16}
+                            />
+                            <Image
+                                src="/static/filters.svg"
+                                alt="Sports"
+                                width={24}
+                                height={24}
+                                className="hidden md:block"
+                            />
                         </div>
                     </div>
                 </div>
                 {renderContent()}
             </div>
             {isFilterOpen && (
-                <Sidebar isOpen={isFilterOpen} heading="Calendar" onClose={closeSidebar}>
+                <Sidebar isOpen={isFilterOpen} heading="Select Date" onClose={closeSidebar}>
                     <div className="flex flex-col justify-between flex-1">
                         <div className="flex flex-wrap gap-4">
                             <MonthCalendar
-                                events={dummyEvents}
+                                events={events}
                                 selectedDate={selectedDate}
                                 setSelectedDate={setSelectedDate}
                                 inSidebar={true}

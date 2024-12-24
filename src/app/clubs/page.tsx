@@ -1,9 +1,11 @@
-import { memo } from "react"
+import { memo, Suspense } from "react"
 
 import ClubsHome from "@/components/clubsHome/clubsHome";
 
 const Clubs = () => (
-    <ClubsHome />
+    <Suspense>
+        <ClubsHome />
+    </Suspense>
 )
 
 export default memo(Clubs);

@@ -4,15 +4,15 @@ import { memo, useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import { categories } from "@/components/constants";
+import { categories, serverUrl } from "@/components/constants";
+
 import Header from "@/components/common/header/header";
 import Footer from "@/components/common/footer/footer";
 import Sidebar from "@/components/common/sidebar/sidebar";
-import IResponseData from "@/app/interfaces/IResponseData";
-import IClubModel from "@/components/homePage/interfaces/IClubResponse";
 import Shimmer from "@/components/shimmer/shimmer";
 
-const serverUrl = "https://prod-ts-liveliness-server.onrender.com/api";
+import IResponseData from "@/app/interfaces/IResponseData";
+import IClubModel from "@/components/homePage/interfaces/IClubResponse";
 
 const shimmerJSX = (
     <>
@@ -72,16 +72,17 @@ const HomePage = () => {
     const [allClubs, setAllClubs] = useState<IClubModel[]>([]);
     const [loadedClubs, setLoadedClubs] = useState(20);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
 
     const toggleFilters = useCallback(() => setIsFilterOpen((prev) => !prev), [setIsFilterOpen]);
     const closeSidebar = useCallback(() => setIsFilterOpen(false), [setIsFilterOpen]);
 
-    const handleCategoryClick = (category: string) => {
+    const handleCategoryClick = useCallback((category: string) => {
         setSelectedCategory((prev) => (prev === category ? null : category));
-    };
+    }, []);
 
-    const getAllClubs = async (sport: string) => {
+    const getAllClubs = useCallback(async (sport: string) => {
         setIsLoading(true);
         try {
             const path = `${serverUrl}/club/getAllClubsForCommunitySport`;
@@ -111,30 +112,58 @@ const HomePage = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
-    const loadMoreClubs = () => {
-        const nextClubs = allClubs.slice(loadedClubs, loadedClubs + 20);
+    const loadMoreClubs = useCallback(() => {
+        const sourceClubs = searchQuery ? clubs : allClubs;
+        const nextClubs = sourceClubs.slice(loadedClubs, loadedClubs + 20);
         setClubs((prevClubs) => [...prevClubs, ...nextClubs]);
         setLoadedClubs((prev) => prev + 20);
-    };
+    }, [searchQuery, clubs, allClubs, loadedClubs]);
 
-    const handleApplyFilter = () => {
+    const handleSearch = useCallback(() => {
+        const filteredClubs = allClubs.filter((club) =>
+            club.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setClubs(filteredClubs.slice(0, 20));
+        setLoadedClubs(20);
+    }, [searchQuery, allClubs]);
+
+    const handleApplyFilter = useCallback(() => {
         if (selectedCategory) {
             getAllClubs(selectedCategory);
         }
         closeSidebar();
-    };
+    }, [selectedCategory, getAllClubs, closeSidebar]);
 
-    const handleClubClick = (club: IClubModel) => {
-        router.push(`/clubs?userId=${club.adminId}&clubName=${club.name}&userName=${club.username}&desciption=${club.bio}&members=${club.participants.length}`);
-    };
+    const handleClubClick = useCallback((club: IClubModel) => {
+        const {
+            adminId,
+            name,
+            username,
+            bio,
+            participants,
+            admin,
+            headerPhoto,
+            avatarPhoto,
+            clubInstagram,
+            clubYouTube,
+            clubTikTok,
+            clubWebsite
+        } = club;
+        router.push(`/clubs?userId=${adminId}&clubName=${name}&userName=${username}
+            &desciption=${bio}&members=${participants.length}&reviewCount=${admin.reviewCount}
+            &headerPhoto=${encodeURIComponent(headerPhoto)}&avatarPhoto=${encodeURIComponent(avatarPhoto)}&instagram=${clubInstagram}
+            &youtube=${clubYouTube}&tiktok=${clubTikTok}&website=${clubWebsite}`);
+    }, [router]);
+
+    useEffect(() => {
+        handleSearch();
+    }, [searchQuery, handleSearch]);
 
     useEffect(() => {
         getAllClubs("");
-    }, []);
-
-    console.log(clubs);
+    }, [getAllClubs]);
 
     return (
         <>
@@ -146,7 +175,7 @@ const HomePage = () => {
                 <div className="container">
                     <div className="flex flex-col gap-14 md:gap-12 w-full md:w-2/4 h-full justify-center pt-14">
                         <h2 className="text-headingLg xl:text-headingXl font-semibold text-primary">
-                            Easily find sports and wellness activities.
+                            Find your sports and wellness community Explore Clubs Find activities
                         </h2>
                         <div className="flex flex-col md:flex-row gap-4">
                             <button
@@ -186,6 +215,8 @@ const HomePage = () => {
                             id="searchClubs"
                             placeholder="Search for clubs"
                             className="focus:outline-none bg-transparent text-primary font-normal text-bodyMd"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                         <Image
                             src="/static/slash.svg"
@@ -200,10 +231,18 @@ const HomePage = () => {
                     >
                         <h5 className="font-normal text-bodyMd text-primary hidden md:block">Sports</h5>
                         <Image
+                            src="/static/filtersSmall.svg"
+                            alt="Filter"
+                            className="block md:hidden"
+                            width={16}
+                            height={16}
+                        />
+                        <Image
                             src="/static/down-bg.svg"
                             alt="Sports"
                             width={24}
                             height={24}
+                            className="hidden md:block"
                         />
                     </div>
                 </div>
@@ -250,31 +289,43 @@ const HomePage = () => {
                                             </h3>
                                             <div className="flex gap-2 items-center">
                                                 <div className="flex items-center gap-1">
-                                                    <h6 className="text-bodyMd text-primary font-semibold">{item.admin.reviewCount}</h6>
+                                                    {item.admin.reviewCount > 0 && (
+                                                        <h6 className="text-bodyMd text-primary font-semibold">{item.admin.reviewCount}</h6>
+                                                    )}
                                                     <div className="flex gap-1">
-                                                        {Array.from({ length: item.admin.reviewCount }).map((_, index) => (
-                                                            <Image
-                                                                key={index}
-                                                                src="/static/star.svg"
-                                                                alt={`Star ${index + 1}`}
-                                                                width={9}
-                                                                height={9}
-                                                                className="w-3 h-3"
-                                                            />
-                                                        ))}
+                                                        {Array.from({ length: 5 }).map((_, index) => {
+                                                            const isFullStar = index < Math.floor(item.admin.reviewCount);
+                                                            const starType = isFullStar
+                                                                ? "/static/star.svg"
+                                                                : "/static/star-empty.svg";
+                                                            return (
+                                                                (
+                                                                    <Image
+                                                                        key={index}
+                                                                        src={starType}
+                                                                        alt={`Star ${index + 1}`}
+                                                                        width={9}
+                                                                        height={9}
+                                                                        className="w-3 h-3"
+                                                                    />
+                                                                )
+                                                            )
+                                                        })}
                                                     </div>
-                                                    <h6 className="text-bodyMd text-primary font-semibold">({item.admin.reviewCount})</h6>
+                                                    {item.admin.reviewCount > 0 && (
+                                                        <h6 className="text-bodyMd text-primary font-semibold">({item.admin.reviewCount})</h6>
+                                                    )}
                                                 </div>
                                                 <h6 className="text-bodyMd text-secondary font-normal">{item.participants.length} members</h6>
                                             </div>
                                             <div className="flex gap-2 items-center">
                                                 {/* <h6 className="text-bodySm text-tertiary font-medium">4.3 km</h6> */}
-                                                <Image
+                                                {/* <Image
                                                     src="/static/dot.svg"
                                                     alt=""
                                                     width={5}
                                                     height={5}
-                                                />
+                                                /> */}
                                                 <h6 className="text-bodySm text-tertiary font-medium">{item.locationString}.</h6>
                                             </div>
                                         </div>
@@ -283,8 +334,8 @@ const HomePage = () => {
                             : shimmerJSX
                         }
                     </div>
-                    <div className="flex justify-center">
-                        {loadedClubs < allClubs.length && (
+                    {(searchQuery && clubs.length > 20) || (!searchQuery && allClubs.length > loadedClubs) && (
+                        <div className="flex justify-center">
                             <button
                                 type="button"
                                 className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
@@ -292,8 +343,8 @@ const HomePage = () => {
                             >
                                 Load More
                             </button>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
                 <Footer />
             </div>
