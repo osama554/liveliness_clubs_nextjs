@@ -27,8 +27,7 @@ const MonthCalendar = (props: IMonthCalendarProps) => {
         }, {} as Record<string, IEventModel[]>);
     };
 
-    const upcomingEvents = events.filter(event => moment(event.trainingStartDateTime).isAfter(currentTime));
-    const eventsByMonth = groupEventsByMonth(upcomingEvents);
+    const eventsByMonth = groupEventsByMonth(events);
 
     const hasEventOnDate = (date: moment.Moment) => {
         const monthKey = date.format('MMMM YYYY');
