@@ -266,7 +266,7 @@ const HomePage = () => {
                                                     alt={item.name}
                                                     width={410}
                                                     height={216}
-                                                    className="w-full h-full object-cover"
+                                                    className="w-full h-full object-cover rounded-xl"
                                                 />
                                             </div>
                                             <div
@@ -279,7 +279,7 @@ const HomePage = () => {
                                                     alt={item.name}
                                                     width={64}
                                                     height={64}
-                                                    className="w-full"
+                                                    className="w-full rounded-2xl"
                                                 />
                                             </div>
                                         </div>
@@ -316,9 +316,11 @@ const HomePage = () => {
                                                         <h6 className="text-bodyMd text-primary font-semibold">({item.admin.reviewCount})</h6>
                                                     )}
                                                 </div>
-                                                <h6 className="text-bodyMd text-secondary font-normal">{item.participants.length} members</h6>
+                                                <h6 className="text-bodyMd text-secondary font-normal">
+                                                    {`${item.participants.length} ${item.participants.length > 1 ? 'members' : 'member'}`}
+                                                </h6>
                                             </div>
-                                            <div className="flex gap-2 items-center">
+                                            <div className="flex gap-2 items-center w-full max-w-64 md:max-w-full">
                                                 {/* <h6 className="text-bodySm text-tertiary font-medium">4.3 km</h6> */}
                                                 {/* <Image
                                                     src="/static/dot.svg"
@@ -326,7 +328,7 @@ const HomePage = () => {
                                                     width={5}
                                                     height={5}
                                                 /> */}
-                                                <h6 className="text-bodySm text-tertiary font-medium">{item.locationString}.</h6>
+                                                <h6 className="text-bodySm text-tertiary font-medium truncate">{item.locationString}.</h6>
                                             </div>
                                         </div>
                                     </div>

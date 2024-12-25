@@ -10,7 +10,11 @@ import IUpcomingEventsListProps from './interfaces/IUpcomingEventsListProps';
 const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
     const { events, selectedDate, loading } = props;
 
-    const groupedEvents = events.reduce((acc, event) => {
+    const upcomingEvents = events.filter(event =>
+        moment(event.trainingStartDateTime).isSameOrAfter(moment(), 'day')
+    );
+
+    const groupedEvents = upcomingEvents.reduce((acc, event) => {
         const dateKey = moment(event.trainingStartDateTime).format('YYYY-MM-DD');
         if (!acc[dateKey]) acc[dateKey] = [];
         acc[dateKey].push(event);
@@ -25,7 +29,7 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
         )
         : groupedEvents;
 
-    const hasNoEvents = selectedDate && Object.keys(filteredGroupedEvents).length === 0;
+    const hasNoEvents = Object.keys(filteredGroupedEvents).length === 0;
 
     return (
         <div className="flex flex-col gap-4 pl-0 xl:pl-8">
@@ -41,14 +45,14 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                         </div>
                     </div>
                 )) : hasNoEvents ? (
-                    <h3 className="text-bodyLg font-semibold text-primary">
-                        No events on this day
+                    <h3 className="text-bodyLg font-semibold text-primary text-center pt-4">
+                        {selectedDate ? 'No events on this day' : 'No upcoming events'}
                     </h3>
                 ) : (
                     Object.entries(filteredGroupedEvents).map(([date, events]) => (
                         <div key={date} className="flex flex-col pt-2">
                             <h3 className="text-bodyMd font-semibold text-primary">
-                                {date}
+                                {moment(date).format('DD MMM')}
                                 <span className="text-tertiary">
                                     {` / ${moment(events[0].trainingStartDateTime).format('dddd')}`}
                                 </span>
@@ -66,16 +70,16 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                                                     alt={event.title}
                                                     width={120}
                                                     height={120}
-                                                    className="w-full"
+                                                    className="w-full rounded-2xl"
                                                 />
                                             </div>
                                             <div className="flex flex-col gap-2">
-                                                <div className="flex flex-col gap-1">
+                                                <div className="flex flex-col gap-1 w-full max-w-36 md:max-w-full">
                                                     <h3 className="text-surface-dark-green text-bodyMd font-semibold">
                                                         {moment(event.trainingStartDateTime).format('hh:mm')} -{' '}
                                                         {moment(event.trainingEndDateTime).format('hh:mm')}
                                                     </h3>
-                                                    <h2 className="text-primary text-bodyLg font-semibold">
+                                                    <h2 className="text-primary text-bodyLg font-semibold truncate">
                                                         {event.title}
                                                     </h2>
                                                 </div>
@@ -88,7 +92,7 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                                                             }
                                                         </h5>
                                                     </div>
-                                                    <div className="flex gap-0.5 items-center">
+                                                    <div className="flex gap-0.5 items-center w-full max-w-36 md:max-w-full">
                                                         <div className="w-4 h-4 flex justify-center items-center">
                                                             <Image
                                                                 src="/static/pin.svg"
@@ -97,7 +101,7 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                                                                 height={13}
                                                             />
                                                         </div>
-                                                        <h6 className="text-bodySm font-medium text-primary">
+                                                        <h6 className="text-bodySm font-medium text-primary truncate">
                                                             {event.trainingLocationString}
                                                         </h6>
                                                     </div>

@@ -2,7 +2,7 @@ export default interface IClubInfoProps {
     name: string;
     userName: string;
     desc: string;
-    members: string;
+    members: number;
     reviewCount: number;
     instagram: string;
     youtube: string;

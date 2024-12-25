@@ -81,7 +81,9 @@ const ClubInfo = (props: IClubInfoProps) => {
                     width={5}
                     height={5}
                 />
-                <h6 className="text-bodyMd text-secondary font-normal">{members} members</h6>
+                <h6 className="text-bodyMd text-secondary font-normal">
+                    {`${members} ${members > 1 ? 'members' : 'member'}`}
+                </h6>
             </div>
         </React.Fragment>
     )

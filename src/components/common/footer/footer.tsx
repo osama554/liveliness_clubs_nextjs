@@ -2,9 +2,9 @@ import Image from "next/image";
 import { memo } from "react"
 
 const Footer = () => (
-    <div className="hidden xl:flex flex-col gap-10">
-        <div className="pt-[3.75rem] flex justify-between">
-            <div className="w-2/4">
+    <div className="flex flex-col gap-10 pb-6 md:pb-[3.75rem]">
+        <div className="pt-[3.75rem] flex flex-col md:flex-row gap-10 md:gap-0 justify-between">
+            <div className="">
                 <Image
                     src="/static/linmo-logo.svg"
                     alt="LINMO"
@@ -13,7 +13,7 @@ const Footer = () => (
                     className="cursor-pointer"
                 />
             </div>
-            <div className="flex w-2/4 justify-end items-center">
+            <div className="flex gap-10 md:gap-0 justify-start md:justify-end items-center flex-wrap">
                 <div className="flex flex-col gap-3 w-[11.771rem]">
                     <h4 className="text-primary text-bodyLg font-semibold">Marketplace</h4>
                     <p className="text-bodyMd font-normal text-secondary cursor-pointer">
@@ -52,8 +52,8 @@ const Footer = () => (
                 </div>
             </div>
         </div>
-        <div className="py-10 border-t border-b border-primary flex items-center">
-            <div className="flex flex-col gap-3 w-[74%]">
+        <div className="py-10 border-t border-b border-primary flex flex-col md:flex-row items-center gap-10 md:gap-0">
+            <div className="flex flex-col gap-3 w-full md:w-2/4 lg:w-[74%]">
                 <h3 className="text-bodyXl font-medium text-primary">
                     Join our newsletter
                 </h3>
@@ -61,7 +61,7 @@ const Footer = () => (
                     Keep up to date with us
                 </p>
             </div>
-            <div className="w-[36%] pl-10 flex gap-3">
+            <div className="w-full md:w-2/4 lg:w-[36%] flex gap-3">
                 <input
                     type="text"
                     placeholder="Enter your email address"
@@ -72,7 +72,7 @@ const Footer = () => (
                 </button>
             </div>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between flex-col md:flex-row gap-6 items-center">
             <p className="text-tertiary text-bodySm font-normal">
                 © Copyright 2023 verona, Inc. All rights reserved.
             </p>
