@@ -8,4 +8,9 @@ export default interface IMonthCalendarProps {
     setSelectedDate: Dispatch<SetStateAction<string | null>>;
     inSidebar?: boolean;
     loading?: boolean;
+    searchQuery?: string;
+    eventsLength?: number;
+    allEventsLength?: number;
+    loadedEvents?: number;
+    loadMoreEvents?: () => void;
 }

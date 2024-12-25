@@ -8,13 +8,9 @@ import IEventModel from '../interfaces/IEventModel';
 import IUpcomingEventsListProps from './interfaces/IUpcomingEventsListProps';
 
 const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
-    const { events, selectedDate, loading } = props;
+    const { events, selectedDate, loading, allEventsLength, eventsLength, loadedEvents, searchQuery, loadMoreEvents } = props;
 
-    const upcomingEvents = events.filter(event =>
-        moment(event.trainingStartDateTime).isSameOrAfter(moment(), 'day')
-    );
-
-    const groupedEvents = upcomingEvents.reduce((acc, event) => {
+    const groupedEvents = events.reduce((acc, event) => {
         const dateKey = moment(event.trainingStartDateTime).format('YYYY-MM-DD');
         if (!acc[dateKey]) acc[dateKey] = [];
         acc[dateKey].push(event);
@@ -117,14 +113,17 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                         </div>
                     ))
                 )}
-            <div className="flex justify-center">
-                <button
-                    type="button"
-                    className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold mt-6"
-                >
-                    Load More
-                </button>
-            </div>
+            {(searchQuery && eventsLength > 25) || (!searchQuery && allEventsLength > loadedEvents) && (
+                <div className="flex justify-center">
+                    <button
+                        type="button"
+                        className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold mt-6"
+                        onClick={loadMoreEvents}
+                    >
+                        Load More
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

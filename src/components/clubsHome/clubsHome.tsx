@@ -2,6 +2,7 @@
 
 import { memo, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import moment from "moment";
 import { useSearchParams } from "next/navigation";
 
 import { serverUrl, tabs } from "../constants";
@@ -13,10 +14,10 @@ import ClubReviews from "./clubReviews/clubReviews";
 import Sidebar from "../common/sidebar/sidebar";
 import MonthCalendar from "../common/monthCalendar/monthCalendar";
 import Footer from "../common/footer/footer";
+import Shimmer from "../shimmer/shimmer";
 
 import IEventModel from "./interfaces/IEventModel";
 import IResponseData from "@/app/interfaces/IResponseData";
-import Shimmer from "../shimmer/shimmer";
 
 const ClubsHome = () => {
     const [activeTab, setActiveTab] = useState("Events");
@@ -24,6 +25,8 @@ const ClubsHome = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [events, setEvents] = useState<IEventModel[]>([]);
+    const [allEvents, setAllEvents] = useState<IEventModel[]>([]);
+    const [loadedEvents, setLoadedEvents] = useState(25);
     const [searchQuery, setSearchQuery] = useState("");
     const searchParams = useSearchParams();
 
@@ -43,6 +46,13 @@ const ClubsHome = () => {
     const toggleFilters = useCallback(() => setIsFilterOpen((prev) => !prev), [setIsFilterOpen]);
     const closeSidebar = useCallback(() => setIsFilterOpen(false), [setIsFilterOpen]);
 
+    const loadMoreEvents = useCallback(() => {
+        const sourceEvents = searchQuery ? events : allEvents;
+        const nextEvents = sourceEvents.slice(loadedEvents, loadedEvents + 25);
+        setEvents((prevEvents) => [...prevEvents, ...nextEvents]);
+        setLoadedEvents((prev) => prev + 25);
+    }, [searchQuery, events, allEvents, loadedEvents]);
+
     const getEvents = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -53,9 +63,12 @@ const ClubsHome = () => {
 
             if (response.ok) {
                 const data: IResponseData<IEventModel> = await response.json();
-                const events = data.data;
-                setEvents(events);
+                let events = data.data;
 
+                events = events.filter((event) => moment(event.trainingStartDateTime).isSameOrAfter(moment(), 'day'));
+
+                setAllEvents(events);
+                setEvents(events.slice(0, 25));
                 setIsLoading(false);
                 return { data: events };
             } else {
@@ -93,6 +106,11 @@ const ClubsHome = () => {
                         selectedDate={selectedDate}
                         setSelectedDate={setSelectedDate}
                         loading={isLoading}
+                        allEventsLength={allEvents.length}
+                        eventsLength={events.length}
+                        loadedEvents={loadedEvents}
+                        searchQuery={searchQuery}
+                        loadMoreEvents={loadMoreEvents}
                     />
                 );
             case "Reviews":
@@ -104,6 +122,11 @@ const ClubsHome = () => {
                         selectedDate={selectedDate}
                         setSelectedDate={setSelectedDate}
                         loading={isLoading}
+                        allEventsLength={allEvents.length}
+                        eventsLength={events.length}
+                        loadedEvents={loadedEvents}
+                        searchQuery={searchQuery}
+                        loadMoreEvents={loadMoreEvents}
                     />
                 )
         }
