@@ -14,8 +14,6 @@ const MonthCalendar = (props: IMonthCalendarProps) => {
         selectedDate ? moment(selectedDate) : null
     );
 
-    const currentTime = moment();
-
     const groupEventsByMonth = (events: IEventModel[]): IEventsByMonth => {
         return events.reduce((acc: IEventsByMonth, event: IEventModel) => {
             const month = moment(event.trainingStartDateTime).format("MMMM YYYY");

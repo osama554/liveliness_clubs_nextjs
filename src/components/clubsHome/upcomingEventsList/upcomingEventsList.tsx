@@ -113,7 +113,7 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                         </div>
                     ))
                 )}
-            {(searchQuery && eventsLength > 25) || (!searchQuery && allEventsLength > loadedEvents) && (
+            {(!hasNoEvents) && ((searchQuery && eventsLength > 25) || (!searchQuery && allEventsLength > loadedEvents)) && (
                 <div className="flex justify-center">
                     <button
                         type="button"
