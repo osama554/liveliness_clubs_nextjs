@@ -27,6 +27,10 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
 
     const hasNoEvents = Object.keys(filteredGroupedEvents).length === 0;
 
+    const sortedGroupedEvents = Object.entries(filteredGroupedEvents).sort(([dateA], [dateB]) =>
+        moment(dateA).isBefore(moment(dateB)) ? -1 : 1
+    );
+
     return (
         <div className="flex flex-col gap-4 pl-0 xl:pl-8">
             {loading ?
@@ -45,12 +49,12 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                         {selectedDate ? 'No events on this day' : 'No upcoming events'}
                     </h3>
                 ) : (
-                    Object.entries(filteredGroupedEvents).map(([date, events]) => (
+                    sortedGroupedEvents.map(([date, events]) => (
                         <div key={date} className="flex flex-col pt-2">
                             <h3 className="text-bodyMd font-semibold text-primary">
                                 {moment(date).format('DD MMM')}
                                 <span className="text-tertiary">
-                                    {` / ${moment(events[0].trainingStartDateTime).format('dddd')}`}
+                                    {` / ${moment(date).format('dddd')}`}
                                 </span>
                             </h3>
                             <div className="flex flex-col gap-4 pt-4">
