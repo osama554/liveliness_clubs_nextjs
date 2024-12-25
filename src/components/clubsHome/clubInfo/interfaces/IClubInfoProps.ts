@@ -8,4 +8,5 @@ export default interface IClubInfoProps {
     youtube: string;
     tiktok: string;
     website: string;
+    loading: boolean;
 }

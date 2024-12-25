@@ -117,6 +117,14 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                         </div>
                     ))
                 )}
+            <div className="flex justify-center">
+                <button
+                    type="button"
+                    className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold mt-6"
+                >
+                    Load More
+                </button>
+            </div>
         </div>
     );
 };

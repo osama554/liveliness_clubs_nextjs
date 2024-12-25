@@ -3,9 +3,10 @@ import React from "react";
 import { memo } from "react"
 
 import IClubInfoProps from "./interfaces/IClubInfoProps";
+import Shimmer from "@/components/shimmer/shimmer";
 
 const ClubInfo = (props: IClubInfoProps) => {
-    const { desc, instagram, members, name, reviewCount, tiktok, userName, website, youtube } = props;
+    const { desc, instagram, members, name, reviewCount, tiktok, userName, website, youtube, loading } = props;
 
     const socialLinks = [
         { platform: "Instagram", url: instagram, icon: "/static/instagram.svg" },
@@ -13,6 +14,25 @@ const ClubInfo = (props: IClubInfoProps) => {
         { platform: "TikTok", url: tiktok, icon: "/static/twitter.svg" },
         { platform: "Website", url: website, icon: "/static/web.svg" },
     ];
+
+    if (loading) {
+        return (
+            <div className="flex flex-col gap-4">
+                <Shimmer width="50%" height="24px" />
+                <Shimmer width="30%" height="18px" />
+                <div className="flex gap-5">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                        <Shimmer key={index} width="28px" height="28px" circle />
+                    ))}
+                </div>
+                <Shimmer width="75%" height="18px" />
+                <div className="flex items-center gap-4">
+                    <Shimmer width="40px" height="18px" />
+                    <Shimmer width="100px" height="18px" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <React.Fragment>

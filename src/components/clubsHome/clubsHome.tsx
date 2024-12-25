@@ -16,6 +16,7 @@ import Footer from "../common/footer/footer";
 
 import IEventModel from "./interfaces/IEventModel";
 import IResponseData from "@/app/interfaces/IResponseData";
+import Shimmer from "../shimmer/shimmer";
 
 const ClubsHome = () => {
     const [activeTab, setActiveTab] = useState("Events");
@@ -114,30 +115,44 @@ const ClubsHome = () => {
                 <Header />
             </div>
             <div className="container">
-                <div className="w-full relative mb-[4.5rem] md:mb-[5.5rem]">
-                    <div className="rounded-xl overflow-hidden h-[198px] md:h-[300px] xl:h-[380px]">
-                        <Image
-                            src={headerPhoto || ''}
-                            alt="Header"
-                            width={1280}
-                            height={380}
-                            className="w-full h-full object-cover rounded-xl"
-                        />
-                    </div>
-                    <div
-                        className="absolute left-2 md:left-6 transform -translate-y-1/2 
+                {isLoading ? (
+                    <div className="w-full relative mb-[4.5rem] md:mb-[5.5rem]">
+                        <Shimmer height="300px" />
+                        <div
+                            className="absolute left-2 md:left-6 transform -translate-y-1/2 
                 w-20 h-20 md:w-[7.5rem] md:h-[7.5rem] rounded-2xl overflow-hidden 
                 shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
-                    >
-                        <Image
-                            src={avatarPhoto || ''}
-                            alt="User"
-                            width={120}
-                            height={120}
-                            className="w-full rounded-2xl"
-                        />
+                        >
+                            <Shimmer height="7.5rem" />
+
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="w-full relative mb-[4.5rem] md:mb-[5.5rem]">
+                        <div className="rounded-xl overflow-hidden h-[198px] md:h-[300px] xl:h-[380px]">
+                            <Image
+                                src={headerPhoto || ''}
+                                alt="Header"
+                                width={1280}
+                                height={380}
+                                className="w-full h-full object-cover rounded-xl"
+                            />
+                        </div>
+                        <div
+                            className="absolute left-2 md:left-6 transform -translate-y-1/2 
+                w-20 h-20 md:w-[7.5rem] md:h-[7.5rem] rounded-2xl overflow-hidden 
+                shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
+                        >
+                            <Image
+                                src={avatarPhoto || ''}
+                                alt="User"
+                                width={120}
+                                height={120}
+                                className="w-full rounded-2xl"
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
             <div className="container">
                 <div className="flex flex-col gap-3 md:gap-6">
@@ -151,11 +166,12 @@ const ClubsHome = () => {
                         youtube={youtube || ''}
                         tiktok={tiktok || ''}
                         website={website || ''}
+                        loading={isLoading}
                     />
                     <div className="flex flex-col lg:flex-row gap-2 xl:pt-4">
                         <div className="w-full lg:w-[391px] flex flex-col">
                             <div className="flex gap-4 items-center max-w-full xl:max-w-[379px] xl:mb-4">
-                                <div
+                                {/* <div
                                     className="hidden xl:flex bg-surface-hard gap-2.5 py-4 px-6 justify-center items-center rounded-2xl h-12 lg:h-14 cursor-pointer"
                                     onClick={toggleFilters}
                                 >
@@ -166,7 +182,7 @@ const ClubsHome = () => {
                                         width={24}
                                         height={24}
                                     />
-                                </div>
+                                </div> */}
                                 <div className="flex p-1 bg-surface-hard rounded-2xl h-14 w-full">
                                     {tabs.map((tab, index) => (
                                         <div
