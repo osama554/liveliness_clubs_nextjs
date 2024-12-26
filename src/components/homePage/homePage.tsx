@@ -223,7 +223,7 @@ const HomePage = () => {
                                     height={16}
                                 />
                             </button>
-                            <button
+                            {/* <button
                                 type="button"
                                 className="bg-surface-secondary-medium text-primary px-5 py-3 rounded-xl text-bodyMd font-semibold flex gap-2 items-center justify-center"
                             >
@@ -234,7 +234,7 @@ const HomePage = () => {
                                     width={16}
                                     height={16}
                                 />
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 </div>

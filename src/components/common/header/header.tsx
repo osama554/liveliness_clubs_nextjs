@@ -5,7 +5,7 @@ import { memo, useCallback, useRef, useState } from "react";
 const isAuthenticated = true;
 
 const Header = () => {
-    const [theme,] = useState<string>("dark");
+    // const [theme,setTheme] = useState<string>("dark");
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLImageElement | null>(null);
@@ -48,7 +48,7 @@ const Header = () => {
                 </p>
             </div>
             <div className="flex-1 justify-end hidden lg:flex gap-4">
-                <div className="flex gap-4 items-center">
+                {/* <div className="flex gap-4 items-center">
                     {isAuthenticated && (
                         <div className="bg-theme-box w-12 h-12 rounded-xl flex justify-center items-center">
                             <Image
@@ -79,8 +79,8 @@ const Header = () => {
                             />
                         </div>
                     )}
-                </div>
-                <div
+                </div> */}
+                {/* <div
                     // onClick={toggleTheme}
                     className="flex items-center justify-between p-1 rounded-2xl bg-theme-box cursor-pointer"
                 >
@@ -121,7 +121,7 @@ const Header = () => {
                                 height={16}
                             />}
                     </div>
-                </div>
+                </div> */}
             </div>
             <div className="flex lg:hidden justify-between w-full">
                 <div className="flex gap-6 items-center">
