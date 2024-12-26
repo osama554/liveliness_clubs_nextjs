@@ -65,7 +65,8 @@ const ClubsHome = () => {
                 const data: IResponseData<IEventModel> = await response.json();
                 let events = data.data;
 
-                events = events.filter((event) => moment(event.trainingStartDateTime).isSameOrAfter(moment(), 'day'));
+                events = events.filter((event) => !event.deleted &&
+                    moment(event.trainingStartDateTime).isSameOrAfter(moment(), 'day'));
 
                 setAllEvents(events);
                 setEvents(events.slice(0, 25));

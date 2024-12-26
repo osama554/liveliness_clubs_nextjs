@@ -63,7 +63,7 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                                         <div className="flex items-center gap-4">
                                             <div
                                                 className="w-[7.5rem] h-[7.5rem] bg-surface-bg rounded-2xl overflow-hidden 
-                                                    shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
+                                                        shadow-[0_0_0_1px_rgba(0,0,0,0.1)] flex items-center justify-center"
                                             >
                                                 <Image
                                                     src={event.coverPhotoUrl || '/static/event.svg'}
@@ -74,12 +74,12 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                                                 />
                                             </div>
                                             <div className="flex flex-col gap-2">
-                                                <div className="flex flex-col gap-1 w-full max-w-36 md:max-w-full">
+                                                <div className="flex flex-col gap-1">
                                                     <h3 className="text-surface-dark-green text-bodyMd font-semibold">
-                                                        {moment(event.trainingStartDateTime).format('hh:mm')} -{' '}
-                                                        {moment(event.trainingEndDateTime).format('hh:mm')}
+                                                        {moment.utc(event.trainingStartDateTime).local().format('hh:mm')} -{' '}
+                                                        {moment.utc(event.trainingEndDateTime).local().format('hh:mm')}
                                                     </h3>
-                                                    <h2 className="text-primary text-bodyLg font-semibold truncate">
+                                                    <h2 className="text-primary text-bodyLg font-semibold">
                                                         {event.title}
                                                     </h2>
                                                 </div>
@@ -92,7 +92,7 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                                                             }
                                                         </h5>
                                                     </div>
-                                                    <div className="flex gap-0.5 items-center w-full max-w-36 md:max-w-full">
+                                                    <div className="flex gap-0.5 items-center w-full max-w-56 md:max-w-full">
                                                         <div className="w-4 h-4 flex justify-center items-center">
                                                             <Image
                                                                 src="/static/pin.svg"

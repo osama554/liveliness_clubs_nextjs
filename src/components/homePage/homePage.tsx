@@ -73,7 +73,29 @@ const HomePage = () => {
     const [loadedClubs, setLoadedClubs] = useState(20);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
+    const [containerHeight, setContainerHeight] = useState(0)
     const router = useRouter();
+
+    const calculateHeight = () => {
+        const viewportHeight = window.innerHeight;
+        const websiteHeaderHeight = 69;
+        const sidebarHeaderHeight = 140;
+        const sidebarFooterHeight = 98;
+
+        const remainingHeight =
+            viewportHeight - websiteHeaderHeight - sidebarHeaderHeight - sidebarFooterHeight;
+
+        setContainerHeight(remainingHeight);
+    };
+
+    useEffect(() => {
+        calculateHeight();
+        window.addEventListener("resize", calculateHeight);
+
+        return () => {
+            window.removeEventListener("resize", calculateHeight);
+        };
+    }, []);
 
     const toggleFilters = useCallback(() => setIsFilterOpen((prev) => !prev), [setIsFilterOpen]);
     const closeSidebar = useCallback(() => setIsFilterOpen(false), [setIsFilterOpen]);
@@ -164,6 +186,18 @@ const HomePage = () => {
     useEffect(() => {
         getAllClubs("");
     }, [getAllClubs]);
+
+    useEffect(() => {
+        if (isFilterOpen) {
+            document.body.classList.add("body-no-scroll");
+        } else {
+            document.body.classList.remove("body-no-scroll");
+        }
+
+        return () => {
+            document.body.classList.remove("body-no-scroll");
+        };
+    }, [isFilterOpen]);
 
     return (
         <>
@@ -352,25 +386,30 @@ const HomePage = () => {
             </div>
             {isFilterOpen && (
                 <Sidebar isOpen={isFilterOpen} heading="Select Sports" onClose={closeSidebar}>
-                    <div className="flex flex-col justify-between flex-1">
-                        <div className="flex flex-wrap gap-4">
-                            {categories.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className={`py-2 px-4 rounded-lg cursor-pointer 
+                    <div className="flex flex-col pb-3">
+                        <div className="flex-1 pb-3 overflow-y-auto">
+                            <div
+                                className="flex flex-wrap gap-3 overflow-y-auto items-center"
+                                style={{ maxHeight: `${containerHeight}px` }}
+                            >
+                                {categories.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className={`py-2 px-4 rounded-lg cursor-pointer 
                                         ${selectedCategory === item ? "bg-surface-green" : "bg-surface-secondary-medium"}`}
-                                    onClick={() => handleCategoryClick(item)}
-                                >
-                                    <h4
-                                        className={`text-bodyMd font-semibold 
-                                        ${selectedCategory === item ? "text-balticSea" : "text-primary"}`}
+                                        onClick={() => handleCategoryClick(item)}
                                     >
-                                        {item}
-                                    </h4>
-                                </div>
-                            ))}
+                                        <h4
+                                            className={`text-bodyMd font-semibold 
+                                        ${selectedCategory === item ? "text-balticSea" : "text-primary"}`}
+                                        >
+                                            {item}
+                                        </h4>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2">
                             <button
                                 type="button"
                                 className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
@@ -380,7 +419,7 @@ const HomePage = () => {
                             </button>
                             <button
                                 type="button"
-                                className="bg-surface-secondary-medium text-primary px-5 py-3 rounded-xl text-bodyMd font-semibold"
+                                className="bg-transparent text-primary px-5 py-3 rounded-xl text-bodyMd font-semibold"
                                 onClick={() => setSelectedCategory(null)}
                             >
                                 Reset
