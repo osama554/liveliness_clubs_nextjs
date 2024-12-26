@@ -165,7 +165,6 @@ const HomePage = () => {
             username,
             bio,
             participants,
-            admin,
             headerPhoto,
             avatarPhoto,
             clubInstagram,
@@ -174,7 +173,7 @@ const HomePage = () => {
             clubWebsite
         } = club;
         router.push(`/clubs?userId=${adminId}&clubName=${name}&userName=${username}
-            &desciption=${bio}&members=${participants.length}&reviewCount=${admin.reviewCount}
+            &desciption=${bio}&members=${participants.length}
             &headerPhoto=${encodeURIComponent(headerPhoto)}&avatarPhoto=${encodeURIComponent(avatarPhoto)}&instagram=${clubInstagram}
             &youtube=${clubYouTube}&tiktok=${clubTikTok}&website=${clubWebsite}`);
     }, [router]);

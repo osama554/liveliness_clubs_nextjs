@@ -1,4 +1,4 @@
-import IEventModel from "../../interfaces/IEventModel";
+import IEventModel from "./IEventModel";
 
 export default interface IUpcomingEventsListProps {
     events: IEventModel[];

@@ -4,8 +4,25 @@ import Image from 'next/image';
 
 import Shimmer from '@/components/shimmer/shimmer';
 
-import IEventModel from '../interfaces/IEventModel';
 import IUpcomingEventsListProps from './interfaces/IUpcomingEventsListProps';
+import IEventModel from './interfaces/IEventModel';
+
+const noEvents = (
+    <div className="flex flex-col gap-14 items-center py-10">
+        <Image
+            src='/static/noEvents.svg'
+            width={215}
+            height={144}
+            alt="No Events"
+        />
+        <div className="flex flex-col gap-2 justify-center items-center">
+            <h2 className="text-primary font-semibold text-headingSm md:text-headingMd">No Events Available</h2>
+            <h3 className="text-secondary text-bodyMd font-normal text-center">
+                There are no events scheduled at the moment. Stay tuned for updates and upcoming activities.
+            </h3>
+        </div>
+    </div>
+);
 
 const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
     const { events, selectedDate, loading, allEventsLength, eventsLength, loadedEvents, searchQuery, loadMoreEvents } = props;
@@ -46,7 +63,7 @@ const UpcomingEventsList = (props: IUpcomingEventsListProps) => {
                     </div>
                 )) : hasNoEvents ? (
                     <h3 className="text-bodyLg font-semibold text-primary text-center pt-4">
-                        {selectedDate ? 'No events on this day' : 'No upcoming events'}
+                        {selectedDate ? 'No events on this day' : noEvents}
                     </h3>
                 ) : (
                     sortedGroupedEvents.map(([date, events]) => (

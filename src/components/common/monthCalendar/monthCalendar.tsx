@@ -2,9 +2,9 @@ import moment from 'moment';
 import Image from 'next/image';
 import { memo, useEffect, useState } from 'react';
 
-import IEventModel from '@/components/clubsHome/interfaces/IEventModel';
-import IEventsByMonth from '@/components/clubsHome/interfaces/IEventsByMonth';
+import IEventsByMonth from '@/components/clubsHome/upcomingEventsList/interfaces/IEventsByMonth';
 import IMonthCalendarProps from './interfaces/IMonthCalendarProps';
+import IEventModel from '@/components/clubsHome/upcomingEventsList/interfaces/IEventModel';
 
 const MonthCalendar = (props: IMonthCalendarProps) => {
     const { events, selectedDate, inSidebar = false, setSelectedDate } = props;

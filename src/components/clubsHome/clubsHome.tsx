@@ -16,8 +16,9 @@ import MonthCalendar from "../common/monthCalendar/monthCalendar";
 import Footer from "../common/footer/footer";
 import Shimmer from "../shimmer/shimmer";
 
-import IEventModel from "./interfaces/IEventModel";
 import IResponseData from "@/app/interfaces/IResponseData";
+import IEventModel from "./upcomingEventsList/interfaces/IEventModel";
+import IReviewModel from "./clubReviews/interfaces/IReviewModel";
 
 const ClubsHome = () => {
     const [activeTab, setActiveTab] = useState("Events");
@@ -26,6 +27,7 @@ const ClubsHome = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [events, setEvents] = useState<IEventModel[]>([]);
     const [allEvents, setAllEvents] = useState<IEventModel[]>([]);
+    const [reviews, setReviews] = useState<IReviewModel[]>([]);
     const [loadedEvents, setLoadedEvents] = useState(25);
     const [searchQuery, setSearchQuery] = useState("");
     const searchParams = useSearchParams();
@@ -35,7 +37,6 @@ const ClubsHome = () => {
     const userName = searchParams.get("userName");
     const desciption = searchParams.get("desciption");
     const members = Number(searchParams.get("members")) || 0;
-    const reviewCount = Number(searchParams.get("reviewCount")) || 0;
     const headerPhoto = searchParams.get("headerPhoto");
     const avatarPhoto = searchParams.get("avatarPhoto");
     const instagram = searchParams.get("instagram");
@@ -54,6 +55,8 @@ const ClubsHome = () => {
     }, [searchQuery, events, allEvents, loadedEvents]);
 
     const getEvents = useCallback(async () => {
+        if (!userId) return;
+
         setIsLoading(true);
         try {
             const path = `${serverUrl}/event/admin/${userId}`;
@@ -84,14 +87,47 @@ const ClubsHome = () => {
     }, [userId]);
 
     useEffect(() => {
-        if (userId?.trim()) {
-            getEvents();
-        }
+        getEvents();
     }, [userId, getEvents]);
+
+    const getReviews = useCallback(async () => {
+        if (!userId) return;
+        setIsLoading(true);
+        try {
+            const path = `${serverUrl}/reviews/getAll/${userId}`;
+            const response = await fetch(path, {
+                method: "GET"
+            });
+
+            if (response.ok) {
+                const data: IResponseData<IReviewModel> = await response.json();
+                const reviews = data.data;
+                console.log(reviews)
+
+                setReviews(reviews.slice(0, 25));
+                setIsLoading(false);
+                return { data: reviews };
+            } else {
+                return { error: "Something went wrong" };
+            }
+        } catch (error) {
+            console.log(error)
+            return { error: "An unknown error occurred" };
+        } finally {
+            setIsLoading(false);
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        getReviews();
+    }, [userId, getReviews]);
 
     const filteredEvents = events.filter((event) =>
         event.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const totalReviews = reviews.length;
+    const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews || 0;
 
     const handleReset = useCallback(() => {
         setSelectedDate(null);
@@ -115,7 +151,7 @@ const ClubsHome = () => {
                     />
                 );
             case "Reviews":
-                return <ClubReviews />
+                return <ClubReviews reviews={reviews} loading={isLoading} />
             default:
                 return (
                     <ClubEvents
@@ -185,12 +221,13 @@ const ClubsHome = () => {
                         userName={userName || ''}
                         desc={desciption || ''}
                         members={members}
-                        reviewCount={reviewCount}
+                        reviewCount={averageRating}
                         instagram={instagram || ''}
                         youtube={youtube || ''}
                         tiktok={tiktok || ''}
                         website={website || ''}
                         loading={isLoading}
+                        totalReviews={totalReviews}
                     />
                     <div className="flex flex-col lg:flex-row gap-2 xl:pt-4">
                         <div className="w-full lg:w-[391px] flex flex-col">

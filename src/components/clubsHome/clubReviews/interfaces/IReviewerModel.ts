@@ -1,0 +1,46 @@
+import ILocationModel from "../../interfaces/ILocationModel";
+
+export default interface IReviewerModel {
+    uid: string;
+    userType: string;
+    bio: string;
+    age: number;
+    email: string;
+    isHidden: boolean;
+    birthDate: string;
+    coverPhoto: string;
+    mainProfilePhoto: string;
+    userPhotos: string[];
+    userInterests: string[];
+    name: string;
+    gender: string;
+    blockedUsers: string[];
+    joinedActivities: string[];
+    joinedEvents: string[];
+    joinedTrips: string[];
+    bookmarkedEvents: string[];
+    bookmarkedActivities: string[];
+    bookmarkedTrips: string[];
+    isProfileVerified: boolean;
+    isEmailVerified: boolean;
+    instagram: string;
+    tikTok: string;
+    website: string;
+    link: string;
+    youTube: string;
+    fcmToken: string[];
+    reviewCount: number;
+    nationality: string;
+    nationalityCode: string;
+    connectedAccountId: string | null;
+    createdAt: string;
+    lastSignedInAt: string;
+    createdLocation: ILocationModel;
+    location: ILocationModel;
+    locationString: string;
+    isNotificationsEnabled: boolean;
+    isActivitiesNotificationsEnabled: boolean;
+    isConnectionNotificationsEnabled: boolean;
+    isMessageNotificationsEnabled: boolean;
+    isPro: boolean;
+}

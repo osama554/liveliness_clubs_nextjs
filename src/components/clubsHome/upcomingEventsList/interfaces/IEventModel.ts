@@ -1,6 +1,5 @@
-
-import ICreatorModel from "./ICreatorModel";
-import ILocationModel from "./ILocationModel";
+import ICreatorModel from "../../interfaces/ICreatorModel";
+import ILocationModel from "../../interfaces/ILocationModel";
 
 export default interface IEventModel {
     trainingId?: string;

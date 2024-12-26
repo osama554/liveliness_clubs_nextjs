@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 
-import IEventModel from "@/components/clubsHome/interfaces/IEventModel";
+import IEventModel from "@/components/clubsHome/upcomingEventsList/interfaces/IEventModel";
 
 export default interface IMonthCalendarProps {
     events: IEventModel[];

@@ -9,4 +9,5 @@ export default interface IClubInfoProps {
     tiktok: string;
     website: string;
     loading: boolean;
+    totalReviews: number;
 }

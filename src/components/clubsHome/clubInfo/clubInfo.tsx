@@ -2,11 +2,12 @@ import Image from "next/image";
 import React from "react";
 import { memo } from "react"
 
-import IClubInfoProps from "./interfaces/IClubInfoProps";
 import Shimmer from "@/components/shimmer/shimmer";
 
+import IClubInfoProps from "./interfaces/IClubInfoProps";
+
 const ClubInfo = (props: IClubInfoProps) => {
-    const { desc, instagram, members, name, reviewCount, tiktok, userName, website, youtube, loading } = props;
+    const { desc, instagram, members, name, reviewCount, tiktok, userName, website, youtube, loading, totalReviews } = props;
 
     const socialLinks = [
         { platform: "Instagram", url: instagram, icon: "/static/instagram.svg" },
@@ -70,7 +71,7 @@ const ClubInfo = (props: IClubInfoProps) => {
                 <div className="flex items-center gap-1">
                     {reviewCount > 0 && (
                         <h6 className="text-bodyMd text-primary font-semibold">
-                            {reviewCount}
+                            {reviewCount.toFixed(1)}
                         </h6>
                     )}
                     <div className="flex gap-1">
@@ -91,8 +92,8 @@ const ClubInfo = (props: IClubInfoProps) => {
                             )
                         })}
                     </div>
-                    {reviewCount > 0 && (
-                        <h6 className="text-bodyMd text-primary font-semibold">({reviewCount})</h6>
+                    {totalReviews > 0 && (
+                        <h6 className="text-bodyMd text-primary font-semibold">({totalReviews})</h6>
                     )}
                 </div>
                 <Image
