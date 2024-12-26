@@ -29,6 +29,7 @@ const ClubsHome = () => {
     const [allEvents, setAllEvents] = useState<IEventModel[]>([]);
     const [reviews, setReviews] = useState<IReviewModel[]>([]);
     const [loadedEvents, setLoadedEvents] = useState(25);
+    const [loadedReviews, setLoadedReviews] = useState(25);
     const [searchQuery, setSearchQuery] = useState("");
     const searchParams = useSearchParams();
 
@@ -53,6 +54,12 @@ const ClubsHome = () => {
         setEvents((prevEvents) => [...prevEvents, ...nextEvents]);
         setLoadedEvents((prev) => prev + 25);
     }, [searchQuery, events, allEvents, loadedEvents]);
+
+    const loadMoreReviews = useCallback(() => {
+        const nextReviews = reviews.slice(loadedReviews, loadedReviews + 25);
+        setReviews((prevReviews) => [...prevReviews, ...nextReviews]);
+        setLoadedReviews((prev) => prev + 25);
+    }, [reviews, loadedReviews]);
 
     const getEvents = useCallback(async () => {
         if (!userId) return;
@@ -151,7 +158,7 @@ const ClubsHome = () => {
                     />
                 );
             case "Reviews":
-                return <ClubReviews reviews={reviews} loading={isLoading} />
+                return <ClubReviews reviews={reviews} loading={isLoading} loadMore={loadMoreReviews} />
             default:
                 return (
                     <ClubEvents

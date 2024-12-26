@@ -60,7 +60,8 @@ const noReviews = (
     </div>
 );
 
-const ClubReviews = ({ reviews, loading }: IClubReviewsProps) => {
+const ClubReviews = (props: IClubReviewsProps) => {
+    const { reviews, loading, loadMore } = props;
     const totalReviews = reviews.length;
     const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews || 0;
 
@@ -189,6 +190,17 @@ const ClubReviews = ({ reviews, loading }: IClubReviewsProps) => {
                     )) : loading ? reviewCardShimmer : noReviews
                 }
             </div>
+            {totalReviews > 25 && (
+                <div className="flex justify-center">
+                    <button
+                        type="button"
+                        className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold mt-6"
+                        onClick={loadMore}
+                    >
+                        Load More
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
