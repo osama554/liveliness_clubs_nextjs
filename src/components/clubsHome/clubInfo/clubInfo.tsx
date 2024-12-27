@@ -10,10 +10,26 @@ const ClubInfo = (props: IClubInfoProps) => {
     const { desc, instagram, members, name, reviewCount, tiktok, userName, website, youtube, loading, totalReviews } = props;
 
     const socialLinks = [
-        { platform: "Instagram", url: instagram, icon: "/static/instagram.svg" },
-        { platform: "YouTube", url: youtube, icon: "/static/youtube.svg" },
-        { platform: "TikTok", url: tiktok, icon: "/static/twitter.svg" },
-        { platform: "Website", url: website, icon: "/static/web.svg" },
+        {
+            platform: "Instagram",
+            url: instagram ? `https://www.instagram.com/${instagram}` : '',
+            icon: "/static/instagram.svg"
+        },
+        {
+            platform: "YouTube",
+            url: youtube ? `https://www.youtube.com/${youtube}` : '',
+            icon: "/static/youtube.svg"
+        },
+        {
+            platform: "TikTok",
+            url: tiktok ? `https://www.tiktok.com/${tiktok}` : '',
+            icon: "/static/twitter.svg"
+        },
+        {
+            platform: "Website",
+            url: website ? website.includes("www.") ? `https://${website}` : `https://www.${website}` : '',
+            icon: "/static/web.svg"
+        },
     ];
 
     if (loading) {

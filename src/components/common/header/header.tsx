@@ -169,19 +169,19 @@ const Header = () => {
                                 </p>
                             </li>
                         )}
-                        <li>
+                        {/* <li>
                             <p className="text-bodyMd font-semibold text-secondary cursor-pointer">
                                 Sell
                             </p>
-                        </li>
-                        <li>
+                        </li> */}
+                        {/* <li>
                             <button
                                 type="button"
                                 className="bg-primary-button text-primary-button px-5 py-3 rounded-xl text-bodyMd font-semibold"
                             >
                                 {isAuthenticated ? "Connect wallet" : "Login"}
                             </button>
-                        </li>
+                        </li> */}
                     </ul>
                 </nav>
             )}
