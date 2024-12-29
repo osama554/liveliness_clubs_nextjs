@@ -109,7 +109,6 @@ const ClubsHome = () => {
             if (response.ok) {
                 const data: IResponseData<IReviewModel> = await response.json();
                 const reviews = data.data;
-                console.log(reviews)
 
                 setReviews(reviews.slice(0, 25));
                 setIsLoading(false);

@@ -12,23 +12,29 @@ const ClubInfo = (props: IClubInfoProps) => {
     const socialLinks = [
         {
             platform: "Instagram",
-            url: instagram ? `https://www.instagram.com/${instagram}` : '',
-            icon: "/static/instagram.svg"
+            value: instagram,
+            url: `https://www.instagram.com/${instagram}`,
+            icon: "/static/instagram.svg",
         },
         {
             platform: "YouTube",
-            url: youtube ? `https://www.youtube.com/${youtube}` : '',
-            icon: "/static/youtube.svg"
+            value: youtube,
+            url: `https://www.youtube.com/${youtube}`,
+            icon: "/static/youtube.svg",
         },
         {
             platform: "TikTok",
-            url: tiktok ? `https://www.tiktok.com/${tiktok}` : '',
-            icon: "/static/twitter.svg"
+            value: tiktok,
+            url: `https://www.tiktok.com/${tiktok}`,
+            icon: "/static/twitter.svg",
         },
         {
             platform: "Website",
-            url: website ? website.includes("www.") ? `https://${website}` : `https://www.${website}` : '',
-            icon: "/static/web.svg"
+            value: website,
+            url: website.includes("www.")
+                ? `https://${website}`
+                : `https://www.${website}`,
+            icon: "/static/web.svg",
         },
     ];
 
@@ -61,23 +67,24 @@ const ClubInfo = (props: IClubInfoProps) => {
                     )}
                 </div>
                 <div className="flex gap-5">
-                    {socialLinks.map(({ platform, url, icon }, index) => (
-                        <a
-                            key={index}
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="cursor-pointer w-7 h-7 flex justify-center items-center"
-                            aria-label={platform}
-                        >
-                            <Image
-                                src={icon}
-                                alt={platform}
-                                width={20}
-                                height={20}
-                            />
-                        </a>
-                    ))}
+                    {socialLinks.filter(({ value }) => value !== null && value !== "")
+                        .map(({ platform, url, icon }, index) => (
+                            <a
+                                key={index}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="cursor-pointer w-7 h-7 flex justify-center items-center"
+                                aria-label={platform}
+                            >
+                                <Image
+                                    src={icon}
+                                    alt={platform}
+                                    width={20}
+                                    height={20}
+                                />
+                            </a>
+                        ))}
                 </div>
             </div>
             <div className="w-full lg:w-3/4 xl:w-2/4">

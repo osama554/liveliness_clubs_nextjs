@@ -77,9 +77,9 @@ const ClubReviews = (props: IClubReviewsProps) => {
     };
 
     return (
-        <div className="flex flex-col gap-10 pb-10 md:pb-20">
+        <div className="flex flex-col gap-0 md:gap-10 pb-6 md:pb-20">
             {loading ? avreageRatingShimmer : (
-                <div className="flex flex-row-reverse md:flex-row gap-6 p-3 my-6 border rounded-2xl border-primary shadow-[0_0_0_0.5px_rgba(0,0,0,0.1)]">
+                <div className="flex flex-row-reverse md:flex-row gap-6 p-3 pb-0 md:pb-3 my-6 border rounded-2xl border-primary shadow-[0_0_0_0.5px_rgba(0,0,0,0.1)]">
                     <div className="flex-none md:flex-1">
                         <div className="flex justify-center h-full items-end md:items-center flex-col bg-transparent md:bg-surface-hard rounded-lg gap-2 py-[2.313rem]">
                             <h2 className="text-headingMd text-primary font-semibold">
@@ -139,7 +139,7 @@ const ClubReviews = (props: IClubReviewsProps) => {
                     </div>
                 </div>
             )}
-            <div className={`grid ${totalReviews === 0 && !loading && 'grid-cols-1 md:grid-cols-1 xl:grid-cols-1'} grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8`}>
+            <div className={`grid ${totalReviews === 0 && !loading && 'grid-cols-1 md:grid-cols-1 xl:grid-cols-1'} grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-8`}>
                 {totalReviews > 0 ?
                     reviews.map((card, index) => (
                         <div
