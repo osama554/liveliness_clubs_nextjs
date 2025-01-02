@@ -35,17 +35,26 @@ const Header = () => {
                     onClick={() => router.push('/')}
                 />
                 <span className="border border-primary"></span>
-                <p className="text-bodyMd font-semibold text-secondary cursor-pointer">
+                <p
+                    className="text-bodyMd font-semibold text-secondary cursor-pointer"
+                    onClick={() => router.push('/')}
+                >
                     Explore
                 </p>
                 {isAuthenticated && (
-                    <p className="text-bodyMd font-semibold text-secondary cursor-pointer">
+                    <a
+                        href="https://www.linmo.app/partnership/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Create"
+                        className="text-bodyMd font-semibold text-secondary cursor-pointer"
+                    >
                         Create
-                    </p>
+                    </a>
                 )}
-                <p className="text-bodyMd font-semibold text-secondary cursor-pointer">
+                {/* <p className="text-bodyMd font-semibold text-secondary cursor-pointer">
                     Sell
-                </p>
+                </p> */}
             </div>
             <div className="flex-1 justify-end hidden lg:flex gap-4">
                 {/* <div className="flex gap-4 items-center">
